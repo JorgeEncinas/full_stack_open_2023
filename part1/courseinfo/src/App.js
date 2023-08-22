@@ -37,7 +37,7 @@ const Total = (props) => {
   //To looking for a "forEach" function like native JS has.
   //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
 
-  var exerciseTotal = 0;
+  let exerciseTotal = 0;
   props.parts.forEach((part) => {
     exerciseTotal += part.exercises;
   });
