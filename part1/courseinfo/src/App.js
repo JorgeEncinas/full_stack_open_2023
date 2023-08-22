@@ -7,12 +7,22 @@ const Header = (props) => {
   )
 }
 
+const Part = (props) => {
+  //Exercise 1.2 required this component.
+  //Thus, the "map" function was changed.
+  return (
+    <>
+    <h3><i>{props.part.name}</i> - {props.part.exercises} exercises</h3>
+    </>
+  )
+}
+
 const Content = (props) => {
   //Idea taken from React's documentation at https://react.dev/learn
   //I thought there must be a way to print this
   //Without writing the component out three times.
   const listParts = props.parts.map(part =>
-    <h3><i>{part.name}</i> - {part.exercises} exercises</h3>
+      <Part part={part} />
     );
   return (
     <>
