@@ -44,9 +44,9 @@ const Content2 = (props) => {
   //Input = "part" object {name:str, exercises:int}
   return (
     <>
-    <Part2 part={props.part1} />
-    <Part2 part={props.part2} />
-    <Part2 part={props.part3} />
+    <Part2 part={props.parts[0]} />
+    <Part2 part={props.parts[1]} />
+    <Part2 part={props.parts[2]} />
     </>
   )
 }
@@ -75,24 +75,12 @@ const App = () => {
     { part:2, name:"Using props to pass data", exercises:7 },
     { part:3, name:"State of a component", exercises:14 }
   ]
-  const part1 = {
-    name: 'Fundamentals of React',
-    exercises: 10
-  }
-  const part2 = {
-    name: 'Using props to pass data',
-    exercises: 7
-  }
-  const part3 = {
-    name: 'State of a component',
-    exercises: 14
-  }
   //<Content parts={parts} />
 
   return (
     <div>
       <Header course={course} />
-      <Content2 part1={part1} part2={part2} part3={part3} />
+      <Content2 parts={parts} />
       <Total parts={parts} />
     </div>
   )
