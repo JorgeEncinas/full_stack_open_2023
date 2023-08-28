@@ -2,7 +2,6 @@ import { useState } from 'react'
 
 const Hello = ({name, age}) => {
   const bornYear = () => new Date().getFullYear() - age
-
   return (
     <div>
     <p>
@@ -13,9 +12,12 @@ const Hello = ({name, age}) => {
   )
 }
 
-const App = (props) => {
-  const {counter} = props
-
+const App = () => {
+  let [ counter, setCounter ] = useState(0)
+  setTimeout(
+    () => setCounter(++counter),
+    1000
+  )
   return (
     <div>{counter}</div>
   )
