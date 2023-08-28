@@ -1,11 +1,8 @@
 import { useState } from 'react'
 
 const Hello = (props) => {
-  const name = props.name
-  const age = props.age
-  const bornYear = () => {
-    return new Date().getFullYear() - age
-  }
+  const { name, age } = props
+  const bornYear = () => new Date().getFullYear() - age
 
   return (
     <div>
