@@ -15,13 +15,16 @@ const Hello = ({name, age}) => {
 const App = () => {
   const [ counter, setCounter ] = useState(0)
   const handleClick = () => {
-    console.log("clicked");
+    setCounter(counter+1);
   }
   return (
     <>
       <div>{counter}</div>
-      <button onClick={() => console.log("clicked")}>
-        plus
+      <button onClick={handleClick}>
+        Add 1
+      </button>
+      <button onClick={() => setCounter(0)}>
+        Reset counter
       </button>
     </>
   )
