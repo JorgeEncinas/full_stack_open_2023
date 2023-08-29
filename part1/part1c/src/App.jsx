@@ -38,8 +38,10 @@ const Button = ({handleClick, text}) => (
 const App = () => {
   const [value, setValue] = useState(10)
 
-  const hello = () => {
-    const handler = () => console.log("hello world")
+  const hello = (who) => {
+    const handler = () => {
+      console.log("hello", who)
+    }
     return handler
   }
 
@@ -51,7 +53,7 @@ const App = () => {
   return (
     <div>
       {value}
-      <button onClick={handleClick}>reset to zero</button>
+      <button onClick={hello()}>reset to zero</button>
     </div>
   )
 }
