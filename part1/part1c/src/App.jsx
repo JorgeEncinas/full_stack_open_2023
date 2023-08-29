@@ -36,6 +36,27 @@ const Button = ({handleClick, text}) => (
 )
 
 const App = () => {
+  const [value, setValue] = useState(10)
+
+  const hello = () => {
+    const handler = () => console.log("hello world")
+    return handler
+  }
+
+  const handleClick = () => {
+    console.log("clicked the button")
+    setValue(0)
+  }
+
+  return (
+    <div>
+      {value}
+      <button onClick={handleClick}>reset to zero</button>
+    </div>
+  )
+}
+
+const AppLeftRight = () => {
   const [left, setLeft] = useState(0)
   const [right, setRight] = useState(0)
   const [allClicks, setAll] = useState([])
