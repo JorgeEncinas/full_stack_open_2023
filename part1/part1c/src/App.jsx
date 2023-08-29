@@ -52,8 +52,10 @@ const App = () => {
 
   return (
     <div>
-      {value}
-      <button onClick={hello()}>reset to zero</button>
+      {value} <br />
+      <button onClick={hello('world')}>button</button>
+      <button onClick={hello('react')}>button</button>
+      <button onClick={hello('function')}>button</button>
     </div>
   )
 }
