@@ -12,22 +12,31 @@ const DisplayStat = ({stat}) => {
   //console.log(stat)
   return (
     <>
-    <h3>{stat.name} - <span>{stat.count}</span></h3>
+    <h3>{stat.name}: <span>{stat.count}</span></h3>
     </>
   )
 }
 
-const DisplayStats = ({stats}) => {
-  return (
-    <div>
-      <DisplayStat stat={stats.good}/>
-      <DisplayStat stat={stats.neutral}/>
-      <DisplayStat stat={stats.bad}/>
-      <DisplayStat stat={stats.total} />
-      <DisplayStat stat={stats.average} />
-      <DisplayStat stat={stats.positivePercentage} />
-    </div>
-  )
+const DisplayStats = ({stats, stateChanged}) => {
+  if (stateChanged) {
+    return (
+      <div>
+        <DisplayStat stat={stats.good}/>
+        <DisplayStat stat={stats.neutral}/>
+        <DisplayStat stat={stats.bad}/>
+        <DisplayStat stat={stats.total} />
+        <DisplayStat stat={stats.average} />
+        <DisplayStat stat={stats.positivePercentage} />
+      </div>
+    )
+  } else {
+    return (
+      <div>
+        No feedback given
+      </div>
+    )
+  }
+  
 }
 
 function App() {
@@ -35,6 +44,7 @@ function App() {
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
   const [total, setTotal] = useState(0)
+  const [stateChanged, setStateChanged] = useState(false)
 
   const setStatistic = (caseString) => () => {
     switch(caseString) {
@@ -51,6 +61,7 @@ function App() {
         console.log("nothing was done.")
         break;
     }
+    setStateChanged(true)
     setTotal(total+1);
     calculateAverage()
     calculatePositivePercentage()
@@ -101,7 +112,7 @@ function App() {
     <Button handleClick={setStatistic("bad")} text="bad" />
     <hr />
     <h1>Statistics</h1>
-    <DisplayStats stats={stats} />
+    <DisplayStats stats={stats} stateChanged={stateChanged} />
     </>
   )
 }
