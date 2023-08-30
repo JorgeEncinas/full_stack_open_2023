@@ -15,6 +15,7 @@ const App = () => {
    
   const [selected, setSelected] = useState(0)
   const [voteDictionary, setVote] = useState({})
+  //For disclosure, new Uint8Array is from https://stackoverflow.com/a/22209781, as suggested in FullStackOpen's website.
   const [voteArray, setVoteArr] = useState(new Uint8Array(anecdotes.length))
 
   const voteAnecdoteArr = () => {
@@ -31,6 +32,7 @@ const App = () => {
 
   const voteAnecdote = () => {
     const voteCopy = { ...voteDictionary}
+    //Comparison to undefined seen here https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined
     if (voteCopy[selected] === undefined) {
       voteCopy[selected] = 1
     } else (
@@ -51,6 +53,7 @@ const App = () => {
     //const voteCopyDict = {...voteDictionary}
     let mostVotedKey = 0
     let mostVotes = 0
+    //Object entries syntax seen here: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries
     for(const [key, value] of Object.entries(voteDictionary)) {
       if (value > mostVotes) {
         mostVotedKey = key
@@ -75,6 +78,7 @@ const App = () => {
   const displayMostVotedArr = () => {
     let mostVotedIndex = -1
     let mostVotes = -1
+    //JS Foreach syntax https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
     voteArray.forEach((votes, index) => {
       if (votes > mostVotes) {
         mostVotedIndex = index
