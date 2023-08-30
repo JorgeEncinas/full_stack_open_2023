@@ -14,16 +14,47 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
+  const [voteDictionary, setVote] = useState({})
+  const [voteArray, setVoteArr] = useState(new Uint8Array(anecdotes.length))
+
+  const voteAnecdoteArr = () => {
+    const voteCopyArr = [...voteArray]
+    voteCopyArr[selected] += 1
+    setVoteArr(voteCopyArr)
+  }
   
   const changeSelect = () => {
     let selectedLocal = Math.floor((Math.random() * anecdotes.length))
-    console.log(selectedLocal)
+    //console.log(selectedLocal)
     setSelected(selectedLocal)
+  }
+
+  const voteAnecdote = () => {
+    const voteCopy = { ...voteDictionary}
+    if (voteCopy[selected] === undefined) {
+      voteCopy[selected] = 1
+    } else (
+      voteCopy[selected] = voteCopy[selected] + 1
+    )
+    setVote(voteCopy);
+  }
+
+  const displayVote = () => {
+    if(voteDictionary[selected] === undefined){
+      return 0
+    } else {
+      return voteDictionary[selected]
+    }
   }
 
   return (
     <div>
-      <button onClick={() => changeSelect()}>Random anecdote</button> <br />
+      <button onClick={voteAnecdote}>Vote (Dict)</button>
+      <button onClick={voteAnecdoteArr}>Vote (Arr)</button>
+      <button onClick={changeSelect}>Random anecdote</button>
+      <br />
+      <div>Votes (Dict): <span>{displayVote()}</span></div>
+      <div>Votes (Array): <span>{voteArray[selected]}</span></div>
       <hr />
       {anecdotes[selected]}
     </div>
