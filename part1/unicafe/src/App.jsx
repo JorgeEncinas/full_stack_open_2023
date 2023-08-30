@@ -8,7 +8,7 @@ const Button = ({handleClick, text}) => {
   )
 }
 
-const DisplayStat = ({stat}) => {
+const StatisticLine = ({stat}) => {
   //console.log(stat)
   return (
     <>
@@ -21,12 +21,12 @@ const DisplayStats = ({stats, stateChanged}) => {
   if (stateChanged) {
     return (
       <div>
-        <DisplayStat stat={stats.good}/>
-        <DisplayStat stat={stats.neutral}/>
-        <DisplayStat stat={stats.bad}/>
-        <DisplayStat stat={stats.total} />
-        <DisplayStat stat={stats.average} />
-        <DisplayStat stat={stats.positivePercentage} />
+        <StatisticLine stat={stats.good}/>
+        <StatisticLine stat={stats.neutral}/>
+        <StatisticLine stat={stats.bad}/>
+        <StatisticLine stat={stats.total} />
+        <StatisticLine stat={stats.average} />
+        <StatisticLine stat={stats.positivePercentage} />
       </div>
     )
   } else {
