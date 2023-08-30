@@ -11,23 +11,26 @@ const Button = ({handleClick, text}) => {
 const StatisticLine = ({stat}) => {
   //console.log(stat)
   return (
-    <>
-    <h3>{stat.name}: <span>{stat.count}</span></h3>
-    </>
+    <tr>
+      <td>{stat.name}:</td>
+      <td>{stat.count}</td>
+    </tr>
   )
 }
 
 const DisplayStats = ({stats, stateChanged}) => {
   if (stateChanged) {
     return (
-      <div>
-        <StatisticLine stat={stats.good}/>
-        <StatisticLine stat={stats.neutral}/>
-        <StatisticLine stat={stats.bad}/>
-        <StatisticLine stat={stats.total} />
-        <StatisticLine stat={stats.average} />
-        <StatisticLine stat={stats.positivePercentage} />
-      </div>
+      <table>
+        <tbody>
+          <StatisticLine stat={stats.good}/>
+          <StatisticLine stat={stats.neutral}/>
+          <StatisticLine stat={stats.bad}/>
+          <StatisticLine stat={stats.total} />
+          <StatisticLine stat={stats.average} />
+          <StatisticLine stat={stats.positivePercentage} />
+        </tbody>
+      </table>
     )
   } else {
     return (
@@ -97,7 +100,7 @@ function App() {
       count:calculateAverage()
     },
     positivePercentage: {
-      name:"positivepercentage",
+      name:"Pos percentage",
       count:calculatePositivePercentage()
     }
   }
