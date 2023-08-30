@@ -1,5 +1,57 @@
 import { useState } from 'react'
 
+const DisplayMostVoted = ({voteDictionary, anecdotes}) => {
+  //const voteCopyDict = {...voteDictionary}
+  let mostVotedKey = 0
+  let mostVotes = 0
+  //Object entries syntax seen here: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries
+  for(const [key, value] of Object.entries(voteDictionary)) {
+    if (value > mostVotes) {
+      mostVotedKey = key
+      mostVotes = value
+    }
+  }
+  if(mostVotes == 0) {
+    return (
+      <>
+      <div>There's no "most voted" anecdote yet</div>
+      </>
+    )
+  }
+  return (
+    <>
+      <div>{anecdotes[mostVotedKey]}</div>
+      <div>Votes: {mostVotes}</div>
+    </>
+  )
+}
+
+const DisplayMostVotedArr = ({voteArray, anecdotes}) => {
+  let mostVotedIndex = -1
+  let mostVotes = -1
+  //JS Foreach syntax https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
+  voteArray.forEach((votes, index) => {
+    if (votes > mostVotes) {
+      mostVotedIndex = index
+      mostVotes = votes
+    }
+  })
+  if(mostVotes == 0) {
+    return (
+      <>
+      <div>There's no "most voted" anecdote yet</div>
+      </>
+    )
+  }
+  return (
+    <>
+      <div>{anecdotes[mostVotedIndex]}</div>
+      <div>Votes: {mostVotes}</div>
+    </>
+  )
+}
+
+
 const App = () => {
 
   const anecdotes = [
@@ -49,57 +101,6 @@ const App = () => {
     }
   }
 
-  const displayMostVoted = () => {
-    //const voteCopyDict = {...voteDictionary}
-    let mostVotedKey = 0
-    let mostVotes = 0
-    //Object entries syntax seen here: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries
-    for(const [key, value] of Object.entries(voteDictionary)) {
-      if (value > mostVotes) {
-        mostVotedKey = key
-        mostVotes = value
-      }
-    }
-    if(mostVotes == 0) {
-      return (
-        <>
-        <div>There's no "most voted" anecdote yet</div>
-        </>
-      )
-    }
-    return (
-      <>
-        <div>{anecdotes[mostVotedKey]}</div>
-        <div>Votes: {mostVotes}</div>
-      </>
-    )
-  }
-
-  const displayMostVotedArr = () => {
-    let mostVotedIndex = -1
-    let mostVotes = -1
-    //JS Foreach syntax https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
-    voteArray.forEach((votes, index) => {
-      if (votes > mostVotes) {
-        mostVotedIndex = index
-        mostVotes = votes
-      }
-    })
-    if(mostVotes == 0) {
-      return (
-        <>
-        <div>There's no "most voted" anecdote yet</div>
-        </>
-      )
-    }
-    return (
-      <>
-        <div>{anecdotes[mostVotedIndex]}</div>
-        <div>Votes: {mostVotes}</div>
-      </>
-    )
-  }
-
   return (
     <div>
       <h1>Anecdote of the day</h1>
@@ -112,10 +113,10 @@ const App = () => {
       {anecdotes[selected]}
       <hr />
       <h1>Anecdote with most votes (Dict)</h1>
-      <div>{displayMostVoted()}</div>
+      <DisplayMostVoted voteDictionary={voteDictionary} anecdotes={anecdotes} />
       <hr />
       <h1>Anecdote with most votes (Array)</h1>
-      <div>{displayMostVotedArr()}</div>
+      <DisplayMostVotedArr voteArray={voteArray} anecdotes={anecdotes} />
     </div>
   )
 }
