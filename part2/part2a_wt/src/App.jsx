@@ -2,8 +2,8 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 
 const DisplayNotes = ({notes}) => {
-  const lielmts = notes.map(note =>
-  <li key={note.id}>
+  const lielmts = notes.map((note,i) =>
+  <li key={i}>
     {note.content}
   </li>
   )
