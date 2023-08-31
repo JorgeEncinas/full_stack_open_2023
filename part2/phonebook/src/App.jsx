@@ -1,22 +1,7 @@
 import { useState } from 'react'
-
-const DisplayName = ({ person }) => {
-  return (
-    <div> {person.name}: {person.phone} </div>
-  )
-}
-
-const DisplayNames = ({persons}) => {
-  const peopleStruct = persons.map((person) => {
-    return <DisplayName key={person.name} person={person} />
-  })
-  //console.log("peopleStruct", peopleStruct)
-  return (
-    <>
-      {peopleStruct}
-    </>
-  )
-}
+import DisplayNames from "./components/DisplayNames"
+import FilterNames from "./components/FilterNames"
+import AddPBEntry from "./components/AddPBEntry"
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -80,29 +65,13 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <form onSubmit={handlePhonebookSubmit}>
-        <h3>Filter</h3>
-        <input
-          value={filterName}
-          onChange={handleFilterNameChange}
+        <FilterNames filterName={filterName} handleFilterNameChange={handleFilterNameChange} />
+        <AddPBEntry 
+          newName = {newName}
+          handleNameChange = {handleNameChange}
+          newPhone = {newPhone}
+          handlePhoneChange = {handlePhoneChange}
         />
-        <hr />
-        <h1>Add new entry to phonebook</h1>
-        <div>
-          name: <input
-                  value={newName}
-                  onChange={handleNameChange} 
-                 />
-        </div>
-        <div>
-          phone number:
-          <input
-            value={newPhone}
-            onChange={handlePhoneChange}
-          />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
       </form>
       <h2>Numbers</h2>
         <DisplayNames persons={filterApply ? showFiltered() : persons}/>
