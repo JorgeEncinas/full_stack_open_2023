@@ -42,7 +42,7 @@ const Course = ({course}) => {
     </>
   )
 }
-
+ /*
 const Courses = ({courses}) => {
   const coursesStruct = courses.map((course) =>{
     return (
@@ -55,7 +55,7 @@ const Courses = ({courses}) => {
       {coursesStruct}
     </div>
   )
-}
+} */
 
 const App = () => {
   const courses = [
@@ -103,7 +103,20 @@ const App = () => {
     }
   ]
 
-  return <Courses courses={courses} />
+  //If you're not meant to create a "Courses" component
+  //Then this is how I think the solution would go...
+
+  const coursesStruct = courses.map((course) => {
+    return (
+      <Course key={course.id} course={course} />
+    )
+  })
+
+  return (
+    <div>
+      {coursesStruct}
+    </div>
+  )
 }
 
 export default App;
