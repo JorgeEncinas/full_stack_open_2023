@@ -22,6 +22,8 @@ const SumOfExercises = ({parts}) => {
     return sum + part.exercises
   },0)
 
+  //const sumReduceFurther = parts.reduce((sum, part) => sum + part.exercises, 0)
+
   return (
     <div>
       Total of exercises: {sum}
