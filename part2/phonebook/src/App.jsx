@@ -30,9 +30,20 @@ const App = () => {
 
   const handleNameSubmit = (event) => {
     event.preventDefault()
-    console.log("we running here!")
-    setPersons(persons.concat({ name: newName }))
-    setNewName("")
+    //A method I devised using "filter", idk how efficient it is.
+    
+    if (persons.filter((person) => newName.toLowerCase() === person.name.toLowerCase()).length = 0) {
+      setPersons(persons.concat({ name: newName }))
+      setNewName("")
+    } else {
+      alert(`"${newName}" is already registered`)
+    }
+    //A method following Mozilla docs.
+    /*
+    if (!persons.includes(newName)) {
+      setPersons(persons.concat({ name: newName }))
+      setNewName("")
+    } */
   }
 
   //NOTE: the order of "value" and "onChange" matters
