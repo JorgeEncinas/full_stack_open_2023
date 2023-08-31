@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 const DisplayName = ({ person }) => {
   return (
-    <div> {person.name} </div>
+    <div> {person.name}: {person.phone} </div>
   )
 }
 
@@ -20,30 +20,35 @@ const DisplayNames = ({persons}) => {
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
+    { name: 'Arto Hellas', phone: "555-12345" }
   ]) 
   const [newName, setNewName] = useState('')
+  const [newPhone, setNewPhone] = useState('')
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
 
-  const handleNameSubmit = (event) => {
+  const handlePhonebookSubmit = (event) => {
     event.preventDefault()
     //A method I devised using "filter", idk how efficient it is.
     
-    if (persons.filter((person) => newName.toLowerCase() === person.name.toLowerCase()).length = 0) {
-      setPersons(persons.concat({ name: newName }))
+    const personsFilter = persons.filter((person) => {
+      return (newName.toLowerCase() === person.name.toLowerCase()
+      || newPhone.trim(" ").trim("-") === person.phone.trim(" ").trim("-"))
+    })
+    
+    if (personsFilter.length == 0) {
+      setPersons(persons.concat({ name: newName, phone: newPhone }))
       setNewName("")
+      setNewPhone("")
     } else {
-      alert(`"${newName}" is already registered`)
+      alert(`Either name: "${newName}" or the phone # ${newPhone} is already registered`)
     }
-    //A method following Mozilla docs.
-    /*
-    if (!persons.includes(newName)) {
-      setPersons(persons.concat({ name: newName }))
-      setNewName("")
-    } */
+  }
+
+  const handlePhoneChange = (event) => {
+    setNewPhone(event.target.value)
   }
 
   //NOTE: the order of "value" and "onChange" matters
@@ -53,12 +58,19 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={handleNameSubmit}>
+      <form onSubmit={handlePhonebookSubmit}>
         <div>
           name: <input
                   value={newName}
                   onChange={handleNameChange} 
                  />
+        </div>
+        <div>
+          phone number:
+          <input
+            value={newPhone}
+            onChange={handlePhoneChange}
+          />
         </div>
         <div>
           <button type="submit">add</button>
