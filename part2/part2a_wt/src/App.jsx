@@ -1,28 +1,26 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
+import Note from './components/Note'
+
 
 const DisplayNotes = ({notes}) => {
-  const lielmts = notes.map((note,i) =>
-  <li key={i}>
+  const lielmts = notes.map(note =>
+  <li key={note.id}>
     {note.content}
   </li>
   )
   return lielmts
 }
 
-const App = (props) => {
-  const { notes } = props
+const App = ({notes}) => {
 
   return (
     <div>
       <h1>Notes</h1>
       <ul>
         {notes.map(note =>
-          <li key={note.id}>
-            {note.content}
-          </li>
+          <Note key={note.id} note={note} />
         )}
-        <DisplayNotes notes={notes} />
       </ul>
     </div>
   )
