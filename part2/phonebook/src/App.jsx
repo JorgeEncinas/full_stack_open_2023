@@ -20,13 +20,34 @@ const DisplayNames = ({persons}) => {
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', phone: "555-12345" }
+    { name: 'Arto Hellas', phone: "555-12345", id: 1 },
+    { name: 'Ada Lovelace', phone: '39-44-5323523', id: 2 },
+    { name: 'Dan Abramov', phone: '12-43-234345', id: 3 },
+    { name: 'Mary Poppendieck', phone: '39-23-6423122', id: 4 }
   ]) 
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
+  const [filterName, setFilterName] = useState("")
+  const [filterApply, setFilterApply] = useState(false)
+
+  const handleFilterNameChange = (event) => {
+    setFilterName(event.target.value)
+    if(filterName.length > 0) {
+      setFilterApply(true)
+    } else {
+      setFilterApply(false)
+    }
+  }
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
+  }
+
+  const showFiltered = () => {
+    return persons.filter((person) => {
+      //console.log(person)
+      return (person.name.toLowerCase()).includes(filterName.toLowerCase())
+    })
   }
 
   const handlePhonebookSubmit = (event) => {
@@ -37,7 +58,7 @@ const App = () => {
       return (newName.toLowerCase() === person.name.toLowerCase()
       || newPhone.trim(" ").trim("-") === person.phone.trim(" ").trim("-"))
     })
-    
+
     if (personsFilter.length == 0) {
       setPersons(persons.concat({ name: newName, phone: newPhone }))
       setNewName("")
@@ -59,6 +80,13 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <form onSubmit={handlePhonebookSubmit}>
+        <h3>Filter</h3>
+        <input
+          value={filterName}
+          onChange={handleFilterNameChange}
+        />
+        <hr />
+        <h1>Add new entry to phonebook</h1>
         <div>
           name: <input
                   value={newName}
@@ -77,7 +105,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-        <DisplayNames persons={persons}/>
+        <DisplayNames persons={filterApply ? showFiltered() : persons}/>
     </div>
   )
 }
