@@ -80,6 +80,12 @@ const App = () => {
           return note.id !== id ? note : returnedNote
         }))
       })
+      .catch(error => {
+        alert(
+          `the note '${note.content}' was already deleted from server`
+        )
+        setNotes(notes.filter(n => n.id !== id))
+      })
   }
 
   return (
