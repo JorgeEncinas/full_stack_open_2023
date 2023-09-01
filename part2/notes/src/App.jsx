@@ -37,8 +37,8 @@ const App = () => {
   const hook = () => {
     //console.log("effect");
     noteService.getAll()
-      .then(response => [
-        setNotes(response.data)
+      .then(initialNotes => [
+        setNotes(initialNotes)
       ])
   }
   useEffect(hook, [])
@@ -56,8 +56,8 @@ const App = () => {
       important: Math.random() < 0.5
     }
     noteService.create(noteObject)
-      .then(response => {
-        setNotes(notes.concat(response.data))
+      .then(returnedNote => {
+        setNotes(notes.concat(returnedNote))
         setNewNote("")
       })
   }
@@ -74,10 +74,10 @@ const App = () => {
       return n.id === id
     })
     const changedNote = {...note, important:!note.important}
-    noteService.update(changedNote)
-      .then(response => {
+    noteService.update(id, changedNote)
+      .then(returnedNote => {
         setNotes(notes.map(note => {
-          return note.id !== id ? note : response.data
+          return note.id !== id ? note : returnedNote
         }))
       })
   }
