@@ -36,42 +36,11 @@ const App = () => {
 
   const hook = () => {
     //console.log("effect");
-
-    axios
-      .get("http://localhost:3001/notes")
-      .then(response => {
-        //console.log("promise fulfilled")
+    noteService.getAll()
+      .then(response => [
         setNotes(response.data)
-      })
+      ])
   }
-
-  //Alternate versions
-  /*
-  useEffect(() => {
-    console.log("effect")
-
-    const eventHandler = response => {
-      console.log("promise fulfilled")
-      setNotes(response.data)
-    }
-    //const promise = axios.get("http://localhost:3001/notes")
-    //promise.then(eventHandler)
-    axios
-      .get("http://localhost:3001/notes")
-      .then(eventHandler)
-  }, [])
-  */
- /* //ALTERNATE VERSION 2, COMPACT.
-  useEffect(() => {
-    console.log("effect");
-    axios
-      .get("http://localhost:3001/notes")
-      .then(response => {
-        console.log("promise fulfilled");
-        setNotes(response.data);
-      })
-  }, [])
-  */
   useEffect(hook, [])
 
   //console.log("render", notes.length, "notes");
@@ -80,29 +49,13 @@ const App = () => {
     ? notes
     : notes.filter(note => note.important)
 
-    /*
-  const addNote = (event) => {
-    event.preventDefault()
-    console.log("button clicked", event.target);
-    const noteObject = {
-      content: newNote,
-      important: Math.random() < 0.5,
-      id: notes.length+1
-    }
-    //const notesCopy = {...notes,  noteObject}
-    //setNotes(notesCopy)}
-    setNotes(notes.concat(noteObject)) //Concat creates a copy! convenient
-    setNewNote("")
-  } */
-
   const addNote = (event) => {
     event.preventDefault()
     const noteObject = {
       content: newNote,
       important: Math.random() < 0.5
     }
-    axios
-      .post("http://localhost:3001/notes", noteObject)
+    noteService.create(noteObject)
       .then(response => {
         setNotes(notes.concat(response.data))
         setNewNote("")
@@ -121,11 +74,10 @@ const App = () => {
       return n.id === id
     })
     const changedNote = {...note, important:!note.important}
-    axios
-      .put(url, changedNote)
+    noteService.update(changedNote)
       .then(response => {
-        setNotes(notes.map(n => {
-          return n.id !== id ? n : response.data
+        setNotes(notes.map(note => {
+          return note.id !== id ? note : response.data
         }))
       })
   }
