@@ -1,19 +1,26 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import DisplayNames from "./components/DisplayNames"
 import FilterNames from "./components/FilterNames"
 import AddPBEntry from "./components/AddPBEntry"
+import axios from 'axios'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', phone: "555-12345", id: 1 },
-    { name: 'Ada Lovelace', phone: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', phone: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', phone: '39-23-6423122', id: 4 }
-  ]) 
+  const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [filterName, setFilterName] = useState("")
   const [filterApply, setFilterApply] = useState(false)
+
+  const fetchNotes = () => {
+    axios
+      .get("http://localhost:3001/persons")
+      .then(response => {
+        console.log(response)
+        setPersons(response.data)
+      })
+  }
+
+  useEffect(fetchNotes,[])
 
   const handleFilterNameChange = (event) => {
     setFilterName(event.target.value)
