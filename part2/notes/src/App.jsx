@@ -34,11 +34,11 @@ const App = () => {
   const [showAll, setShowAll] = useState(true)
 
   const hook = () => {
-    console.log("effect");
+    //console.log("effect");
     axios
       .get("http://localhost:3001/notes")
       .then(response => {
-        console.log("promise fulfilled")
+        //console.log("promise fulfilled")
         setNotes(response.data)
       })
   }
@@ -72,12 +72,13 @@ const App = () => {
   */
   useEffect(hook, [])
 
-  console.log("render", notes.length, "notes");
+  //console.log("render", notes.length, "notes");
 
   const notesToShow = showAll
     ? notes
     : notes.filter(note => note.important)
 
+    /*
   const addNote = (event) => {
     event.preventDefault()
     console.log("button clicked", event.target);
@@ -90,6 +91,19 @@ const App = () => {
     //setNotes(notesCopy)}
     setNotes(notes.concat(noteObject)) //Concat creates a copy! convenient
     setNewNote("")
+  } */
+
+  const addNote = (event) => {
+    event.preventDefault()
+    const noteObject = {
+      content: newNote,
+      important: Math.random() < 0.5
+    }
+    axios
+      .post("http://localhost:3001/notes", noteObject)
+      .then(response => {
+        console.log(response)
+      })
   }
 
   const handleNoteChange = (event) => {
