@@ -3,6 +3,7 @@ import DisplayNames from "./components/DisplayNames"
 import FilterNames from "./components/FilterNames"
 import AddPBEntry from "./components/AddPBEntry"
 import axios from 'axios'
+import jsonDB from './services/jsondb'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -11,16 +12,14 @@ const App = () => {
   const [filterName, setFilterName] = useState("")
   const [filterApply, setFilterApply] = useState(false)
 
-  const fetchNotes = () => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then(response => {
-        console.log(response)
-        setPersons(response.data)
-      })
+  const fetchPeople = () => {
+    jsonDB.getAll()
+    .then(people => {
+      setPersons(people)
+    })
   }
 
-  useEffect(fetchNotes,[])
+  useEffect(fetchPeople,[])
 
   const handleFilterNameChange = (event) => {
     setFilterName(event.target.value)
