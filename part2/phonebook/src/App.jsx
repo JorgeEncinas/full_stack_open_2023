@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import DisplayNames from "./components/DisplayNames"
 import FilterNames from "./components/FilterNames"
 import AddPBEntry from "./components/AddPBEntry"
-import axios from 'axios'
 import jsonDB from './services/jsondb'
 
 const App = () => {
@@ -47,13 +46,22 @@ const App = () => {
     
     const personsFilter = persons.filter((person) => {
       return (newName.toLowerCase() === person.name.toLowerCase()
-      || newPhone.trim(" ").trim("-") === person.phone.trim(" ").trim("-"))
+      || newPhone.trim(" ").trim("-") === person.number.trim(" ").trim("-"))
     })
 
     if (personsFilter.length == 0) {
-      setPersons(persons.concat({ name: newName, phone: newPhone }))
-      setNewName("")
-      setNewPhone("")
+      jsonDB.create({
+        name: newName,
+        number: newPhone
+      })
+      .then(personCreated => {
+        setPersons(persons.concat(personCreated))
+        setNewName("")
+        setNewPhone("")
+      })
+      .catch(error => {
+        alert("Something went wrong adding the user to the Database.")
+      })      
     } else {
       alert(`Either name: "${newName}" or the phone # ${newPhone} is already registered`)
     }
