@@ -11,14 +11,14 @@ console.log(promise2)
 promise.then(response => {
   console.log(response)
 }) */
-
+/*
 axios
   .get("http://localhost:3001/notes")
   .then(response => {
     const notes = response.data
     console.log(notes)
   })
-
+*/
 const DisplayNotes = ({notes}) => {
   const lielmts = notes.map(note =>
   <li key={note.id}>
