@@ -12,7 +12,7 @@ const App = () => {
   const [filterApply, setFilterApply] = useState(false)
 
   const fetchPeople = () => {
-    jsonDB.getAll()
+    jsonDB.getAllPersons()
     .then(people => {
       setPersons(people)
     })
@@ -50,7 +50,7 @@ const App = () => {
     })
 
     if (personsFilter.length == 0) {
-      jsonDB.create({
+      jsonDB.createPerson({
         name: newName,
         number: newPhone
       })
@@ -71,6 +71,20 @@ const App = () => {
     setNewPhone(event.target.value)
   }
 
+  const handleDelete = (id, name) => () => {
+    if (window.confirm(`Are you sure you want to delete ${name} from the Phonebook?`)) {
+      jsonDB.deletePerson(id)
+      .then(status => {
+        if (status === 200) {
+          console.log(`deleted ${name} successfully`)
+        }
+        setPersons(persons.filter(person => {
+          return person.id !== id
+        }))
+      })
+    }
+  }
+
   //NOTE: the order of "value" and "onChange" matters
   //For the input element. I put them backwards and
   //Received an error msg
@@ -88,7 +102,10 @@ const App = () => {
         />
       </form>
       <h2>Numbers</h2>
-        <DisplayNames persons={filterApply ? showFiltered() : persons}/>
+        <DisplayNames
+          persons={filterApply ? showFiltered() : persons}
+          operationFunctions= { { handleDelete } }
+        />
     </div>
   )
 }
