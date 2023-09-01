@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Note from './components/Note'
 import axios from 'axios'
+import noteService from "./services/notes"
 
 /*const promise = axios.get("http://localhost:3001/notes")
 console.log(promise)
@@ -35,6 +36,7 @@ const App = () => {
 
   const hook = () => {
     //console.log("effect");
+
     axios
       .get("http://localhost:3001/notes")
       .then(response => {
@@ -102,7 +104,8 @@ const App = () => {
     axios
       .post("http://localhost:3001/notes", noteObject)
       .then(response => {
-        console.log(response)
+        setNotes(notes.concat(response.data))
+        setNewNote("")
       })
   }
 
@@ -111,17 +114,36 @@ const App = () => {
     setNewNote(event.target.value)
   }
 
+  const toggleImportanceOf = (id) => {
+    console.log(`importance of ${id} needs to be toggled`)
+    const url = `http://localhost:3001/notes/${id}`
+    const note = notes.find(n => {
+      return n.id === id
+    })
+    const changedNote = {...note, important:!note.important}
+    axios
+      .put(url, changedNote)
+      .then(response => {
+        setNotes(notes.map(n => {
+          return n.id !== id ? n : response.data
+        }))
+      })
+  }
+
   return (
     <div>
       <h1>Notes</h1>
       <button onClick={() => setShowAll(!showAll)}>
         show {showAll ? "important" : "all"}
       </button>
-      <ul>
+      <table>
+        <tbody>
         {notesToShow.map(note =>
-          <Note key={note.id} note={note} />
+          <Note key={note.id} note={note}
+          toggleImportance={() => toggleImportanceOf(note.id)} />
         )}
-      </ul>
+        </tbody>
+      </table>
       <form onSubmit={addNote}>
         <input  value={newNote}
                 onChange={handleNoteChange} />
