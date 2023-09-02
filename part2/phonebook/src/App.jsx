@@ -42,28 +42,72 @@ const App = () => {
 
   const handlePhonebookSubmit = (event) => {
     event.preventDefault()
-    //A method I devised using "filter", idk how efficient it is.
-    
-    const personsFilter = persons.filter((person) => {
-      return (newName.toLowerCase() === person.name.toLowerCase()
-      || newPhone.trim(" ").trim("-") === person.number.trim(" ").trim("-"))
-    })
+    //Replace All https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replaceAll
+    //U really should use a RegEx to filter out numbers and names that are
+    //"The same" but manipulated to be able to add them
+    //But I think it's outside the scope,
+    //And it would require a lot of reading.
 
-    if (personsFilter.length == 0) {
-      jsonDB.createPerson({
-        name: newName,
-        number: newPhone
-      })
-      .then(personCreated => {
-        setPersons(persons.concat(personCreated))
-        setNewName("")
-        setNewPhone("")
-      })
-      .catch(error => {
-        alert("Something went wrong adding the user to the Database.")
-      })      
+    const newPhoneTrimmed = newPhone.trim().replaceAll(" ", "").replaceAll("-", "");
+    const newNameTrimmed = newName.toLowerCase().trim().replaceAll(" ", "");
+
+    if (newPhoneTrimmed.length < 1 || newNameTrimmed.length < 1) {
+      alert("Please fill the form completely")
     } else {
-      alert(`Either name: "${newName}" or the phone # ${newPhone} is already registered`)
+      const personsFilter = persons.filter((person) => {
+        return newNameTrimmed === person.name.toLowerCase().trim().replaceAll(" ", "")
+      })
+  
+      const phoneFilter = persons.filter((person) => {
+        let numberSimplified = person.number.trim().replaceAll(" ", "").replaceAll("-", "")
+        return newPhoneTrimmed === numberSimplified;
+      })
+      ///Combinations...
+      // Phone is Registered (X) ____ Person is Registered (Y) ____ Response (Z)
+      //       T                          F                   "Phone is taken"
+      //       T                          T                   "Phone and person registered". Actually, it won't go into this situation.
+      //       F                          T                   "Update person's number?"
+      //       F                          F                   "Go ahead"
+  
+      if (phoneFilter.length > 0) { //Takes care of cases X=T. Either way, you won't be able to make a change.
+        alert("This number is already registered")
+      }
+      else if (personsFilter.length > 0) { // X=F, Y=T
+        //NOTE: Getting here implies the phone number's new
+        //If there's more than one person (which there shouldn't be)
+        //Then just take the very first person.
+        const existingPerson = personsFilter[0];
+        const confirmPhoneChangeMessage = `"${existingPerson.name}" has already been added 
+        with number "${existingPerson.number}". Do you want to change their 
+        number to "${newPhone}"?`
+        if (window.confirm(confirmPhoneChangeMessage)) {
+            existingPerson.number = newPhone
+            const updatedPerson = jsonDB.updatePerson(
+              existingPerson.id,
+              existingPerson)
+            setPersons(persons.map(person => {
+              return updatedPerson.id !== person.id ? person : updatedPerson
+            }))
+            setNewName("")
+            setNewPhone("")
+        }
+      } else if(personsFilter.length === 0) { //X = F, Y = F
+        jsonDB.createPerson({
+          name: newName,
+          number: newPhone
+        })
+        .then(personCreated => {
+          setPersons(persons.concat(personCreated))
+          setNewName("")
+          setNewPhone("")
+        })
+        .catch(error => {
+          alert("Something went wrong adding the user to the Database.")
+          //console.log(error)
+        })      
+      } else {
+        console.log("Unexpected situation encountered.")
+      }
     }
   }
 
