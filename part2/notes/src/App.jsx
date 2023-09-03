@@ -93,7 +93,12 @@ const App = () => {
         setNotes(notes.filter(n => n.id !== id))
       })
   }
-
+  
+  /* "Suitable when it's impossible to define the state
+  So that the INITIAL RENDERING IS POSSIBLE" -FSO, part 2e.
+  if(!notes) {
+    return null
+  }*/
   return (
     <div>
       <h1>Notes</h1>
