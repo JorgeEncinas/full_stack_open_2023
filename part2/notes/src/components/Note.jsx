@@ -4,7 +4,7 @@ const Note = ({ note, toggleImportance }) => {
 
     return (
       <tr>
-        <td>
+        <td className="note">
           { note.content }
         </td>
         <td>

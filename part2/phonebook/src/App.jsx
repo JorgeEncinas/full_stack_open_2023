@@ -3,6 +3,7 @@ import DisplayNames from "./components/DisplayNames"
 import FilterNames from "./components/FilterNames"
 import AddPBEntry from "./components/AddPBEntry"
 import jsonDB from './services/jsondb'
+import Notification from "./components/Notification"
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -10,6 +11,8 @@ const App = () => {
   const [newPhone, setNewPhone] = useState('')
   const [filterName, setFilterName] = useState("")
   const [filterApply, setFilterApply] = useState(false)
+  const [notifMessage, setNotifMessage] = useState(null)
+  const [notifClassesString, setNotifClasses] = useState("notification msg-info")
 
   const fetchPeople = () => {
     jsonDB.getAllPersons()
@@ -19,6 +22,15 @@ const App = () => {
   }
 
   useEffect(fetchPeople,[])
+
+  
+  const sendNotif = (newClassesString, message, timeOutMS=5000) => {
+    setNotifClasses(newClassesString)
+    setNotifMessage(message)
+    setTimeout(() => {
+      setNotifMessage(null)
+    }, timeOutMS)
+  }
 
   const handleFilterNameChange = (event) => {
     setFilterName(event.target.value)
@@ -76,20 +88,53 @@ const App = () => {
         //NOTE: Getting here implies the phone number's new
         //If there's more than one person (which there shouldn't be)
         //Then just take the very first person.
-        const existingPerson = personsFilter[0];
+
+        //"{...personsFilter[0]}" needed to be done
+        //To ensure we were creating a copy of the obj
+        //Before, we were only getting a reference.
+        //Thus, if we wanted to change their number
+        //But the person didn't exist in the DB anymore
+        //We would have still changed the number locally
+        //Which I think breaks some rules about maintaining the data
+        //Equal to the real state and data.
+        const existingPerson = {...personsFilter[0]};
         const confirmPhoneChangeMessage = `"${existingPerson.name}" has already been added 
         with number "${existingPerson.number}". Do you want to change their 
         number to "${newPhone}"?`
         if (window.confirm(confirmPhoneChangeMessage)) {
             existingPerson.number = newPhone
-            const updatedPerson = jsonDB.updatePerson(
+            jsonDB.updatePerson(
               existingPerson.id,
               existingPerson)
-            setPersons(persons.map(person => {
-              return updatedPerson.id !== person.id ? person : updatedPerson
-            }))
-            setNewName("")
-            setNewPhone("")
+            .then(updatedPerson => {
+              setPersons(persons.map(person => {
+                return updatedPerson.id !== person.id ? person : updatedPerson
+              }))
+              setNewName("")
+              setNewPhone("")
+              sendNotif(
+                "msg-success",
+                `Changed ${updatedPerson.name}'s number`
+              )
+            })
+            .catch(error => {
+              //console.log(error)
+              if(error.request.status === 404) {
+                sendNotif(
+                  "msg-failure",
+                  `Person ${newName} was not found. Press "add" again to add them.`
+                )
+                setPersons(persons.filter(person => {
+                  return person.id !== existingPerson.id
+                }))
+              } else {
+                sendNotif(
+                  "msg-failure",
+                  `Couldn't update ${newName} to number ${newPhone}`
+                )
+              }
+            })
+            
         }
       } else if(personsFilter.length === 0) { //X = F, Y = F
         jsonDB.createPerson({
@@ -100,10 +145,17 @@ const App = () => {
           setPersons(persons.concat(personCreated))
           setNewName("")
           setNewPhone("")
+          sendNotif(
+            "msg-success",
+            `Added ${personCreated.name} to phonebook`
+          )
         })
         .catch(error => {
-          alert("Something went wrong adding the user to the Database.")
           //console.log(error)
+          sendNotif(
+            "msg-failure",
+            `Person '${newName}' with number '${newPhone} couldn't be added.'`
+          )
         })      
       } else {
         console.log("Unexpected situation encountered.")
@@ -120,11 +172,35 @@ const App = () => {
       jsonDB.deletePerson(id)
       .then(status => {
         if (status === 200) {
-          console.log(`deleted ${name} successfully`)
+          sendNotif(
+            "msg-success",
+            `deleted ${name} successfully`
+          )
         }
         setPersons(persons.filter(person => {
           return person.id !== id
         }))
+      })
+      .catch(error => {
+        if (error.request.status === 404) {
+          //console.log(persons)
+          let personRequested = persons.find((person) => {
+            return person.id === id
+          })
+          sendNotif(
+            "msg-failure",
+            `Person "${personRequested.name}" was not found. They may have already been deleted.`
+          )
+          setPersons(persons.filter(person => {
+            return person.id !== id
+          }))
+        } else {
+          sendNotif(
+            "msg-failure",
+            `Unexpected error encountered`
+          )
+        }
+        //console.log(error)
       })
     }
   }
@@ -136,6 +212,10 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification 
+        classesString={notifClassesString}
+        notifMessage={notifMessage}
+      />
       <form onSubmit={handlePhonebookSubmit}>
         <FilterNames filterName={filterName} handleFilterNameChange={handleFilterNameChange} />
         <AddPBEntry 

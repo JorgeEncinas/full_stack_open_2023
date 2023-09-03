@@ -21,34 +21,14 @@
       "id": 4
     },
     {
-      "name": "steven",
-      "number": "8989",
-      "id": 9
+      "name": "ada",
+      "number": "31221",
+      "id": 5
     },
     {
-      "name": "johnny storm",
-      "number": "123143",
-      "id": 10
-    },
-    {
-      "name": "mary lamb",
-      "number": "8437-1923",
-      "id": 11
-    },
-    {
-      "name": "number stealer",
-      "number": "11111111",
-      "id": 12
-    },
-    {
-      "name": "john",
-      "number": "9848484",
-      "id": 14
-    },
-    {
-      "name": "mary steal that number",
-      "number": "938423",
-      "id": 15
+      "name": "james",
+      "number": "4",
+      "id": 6
     }
   ]
 }
