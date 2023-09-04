@@ -1,6 +1,8 @@
 const express = require("express")
 const app = express()
 
+app.use(express.json())
+
 let notes = [
     {
       id: 1,
@@ -28,12 +30,46 @@ app.get("/api/notes", (request, response) => {
 })
 
 app.get("/api/notes/:id", (request, response) => {
-    const id = request.params.id
+    const id = Number(request.params.id)
     const note = notes.find(note => {
-        console.log(note.id, typeof note.id, id, typeof id, note.id === id)
+        //console.log(note.id, typeof note.id, id, typeof id, note.id === id)
         return note.id === id
     })
-    console.log(note)
+    if (note) {
+        response.json(note)
+    } else {
+        response.status(404).end()
+    }
+})
+
+app.delete("/api/notes/:id", (request, response) => {
+    const id = Number(request.params.id)
+    notes = notes.filter(note => note.id !== id)
+
+    response.status(204).end()
+})
+
+const generateId = () => {
+    const maxId = notes.length > 0
+        ? Math.max(...notes.map(note => note.id))
+        : 0
+    return maxId + 1;
+}
+
+app.post("/api/notes", (request, response) => {
+    const body = request.body
+    if (!body.content) {
+        return response.status(400).json({
+            error: "'content' property is missing"
+        })
+    }
+    const note = {
+        id: generateId(),
+        content: body.content,
+        important: body.important || false
+    }
+
+    notes = notes.concat(note)
     response.json(note)
 })
 
