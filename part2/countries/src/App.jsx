@@ -5,7 +5,7 @@ import countriesAPI from "./services/countriesAPI"
 function App() {
   const [country, setCountry] = useState("")
   const [countries, setCountries] = useState(null)
-  const [currentCountry, setCurrentCountry] = useState({})
+  const [currentCountry, setCurrentCountry] = useState(null)
 
   const handleCountryChange = (event) => {
     setCountry(event.target.value)
@@ -37,14 +37,17 @@ function App() {
       return countriesFiltered
     })
     .then(countriesFiltered => {
-      if (countriesFiltered.length === 1)
+      if (countriesFiltered.length === 1) {
+        console.log("Getting 1...")
         return countriesAPI.get(countriesFiltered[0].name.common)
+      }
       else {
         return null
       }
     })
     .then(countryRetrieved => {
-      countryRetrieved === null ? setCurrentCountry({}) : setCurrentCountry(countryRetrieved)
+      console.log("countryRetrieved get()", countryRetrieved)
+      countryRetrieved === null ? setCurrentCountry(null) : setCurrentCountry(countryRetrieved)
     })
   }
 

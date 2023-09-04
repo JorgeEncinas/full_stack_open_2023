@@ -4,16 +4,9 @@ const Countries = ({ countries, currentCountry }) => {
     if (countries === null) {
         return <div>Go ahead, search for a country!</div>
     }
+    console.log("currentCountry", currentCountry)
     const lngth = countries.length
-    const detailedCountry = () => {
-        //console.log("running detailedCountry", countries[0])
-        getCountryDetailsFn()
-        .then(country => {
-            console.log(country)
-           
-            return <Country country={country} />
-        })
-    }
+
     if (lngth > 10){
         return (
             <div>
@@ -39,7 +32,7 @@ const Countries = ({ countries, currentCountry }) => {
     } else if(lngth === 1) {
         return (
             <>
-            <Country currentCountry={currentCountry} />
+            <Country country={currentCountry} />
             </>
         )
     } else {

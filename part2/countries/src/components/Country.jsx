@@ -10,7 +10,7 @@ const Country = ({ country }) => {
         )
     })
     */
-    if(country === null) {
+    if(country === null || country === undefined) {
         return <div>Nothing</div>
     }
 
