@@ -8,7 +8,17 @@ function App() {
   const [currentCountry, setCurrentCountry] = useState(null)
 
   const handleCountryChange = (event) => {
+    setCurrentCountry(null)
     setCountry(event.target.value)
+  }
+
+  const handleCountrySelect = (countryOfficialName) => () => {
+    countriesAPI.get(countryOfficialName)
+      .then(countryRetrieved => {
+        if (countryRetrieved !== null) {
+          setCurrentCountry(countryRetrieved)
+        } 
+      })
   }
 
   const getCountriesFiltered = () => {
@@ -53,6 +63,7 @@ function App() {
         <Countries 
           countries={countries} 
           currentCountry={currentCountry}
+          countryOperations={ {handleCountrySelect} }
         />
       </div>
     </>

@@ -1,11 +1,39 @@
 import Country from "./Country"
 
-const Countries = ({ countries, currentCountry }) => {
+const CountryListDisplay = ({countries, countryOperations}) => {
+    const countriesDisplay = countries.map(country => {
+        return (
+        <tr key={country.name.common}>
+            <td><b>{country.name.common}</b> (<i>{country.name.official}</i>)</td>
+            <td><button
+                onClick={countryOperations.handleCountrySelect(country.name.official)}>
+                    show 
+                </button>
+            </td>
+        </tr>
+        )
+    })
+    return (
+        <table>
+            <tbody>
+                {countriesDisplay}
+            </tbody>
+        </table>
+    )
+}
+
+const Countries = ({ countries, currentCountry, countryOperations }) => {
     if (countries === null) {
         return <div>Go ahead, search for a country!</div>
     }
     const lngth = countries.length
-
+    if(currentCountry !== null) {
+        return (
+            <>
+            <Country country={currentCountry} />
+            </>
+        )
+    }
     if (lngth > 10){
         return (
             <div>
@@ -13,26 +41,10 @@ const Countries = ({ countries, currentCountry }) => {
             </div>
         )
     } else if (lngth > 1) {
-        const countriesDisplay = countries.map(country => {
-            return (
-            <tr key={country.name.common}>
-                <td ><b>{country.name.common}</b> (<i>{country.name.official}</i>)</td>
-            </tr>
-            )
-        })
-        return (
-            <table>
-                <tbody>
-                    {countriesDisplay}
-                </tbody>
-            </table>
-        )
-    } else if(lngth === 1) {
-        return (
-            <>
-            <Country country={currentCountry} />
-            </>
-        )
+        return <CountryListDisplay
+            countries={countries}
+            countryOperations={countryOperations}
+        />
     } else {
         return (
             <div>
