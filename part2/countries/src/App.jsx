@@ -11,18 +11,6 @@ function App() {
     setCountry(event.target.value)
   }
 
-  const getCountryDetailsFn = () => {
-    const countryDetailed = countriesAPI.get(countries[0].name.common)
-     //HOW DO WE MODIFY STATE HERE.
-      //State logic must be kept within App, right?
-      //While we DO get the data here, maybe we're supposed to keep this function elsewhere.
-      //Somehow, we must BOTH return the country thing
-      //If currentCountry is an object, we can keep it within App.jsx
-      //And if countries.length === 0 then we know we can access it freely.
-      //Thus, it's possible.
-    return countryDetailed
-  }
-
   const getCountriesFiltered = () => {
     countriesAPI.getAll()
     .then(countriesAll => {
