@@ -12,6 +12,9 @@ function App() {
   }
 
   const getCountriesFiltered = () => {
+    if (country.length < 1) {
+      return undefined
+    }
     countriesAPI.getAll()
     .then(countriesAll => {
       let countriesFiltered = 
