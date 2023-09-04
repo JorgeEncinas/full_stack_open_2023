@@ -1,0 +1,8 @@
+.country-name {
+    display: flex;
+    align-items:baseline;
+    margin-bottom: 0;
+}
+.country-name h1 {
+    margin-right: 10px;
+}

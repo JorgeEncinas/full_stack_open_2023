@@ -1,29 +1,41 @@
-const Country = ({ country }) => {
+import "../index.css"
 
-    console.log("Country in component", country)
-    /*
-    const languages = country.languages.map(language => {
+const Languages = ({ country }) => {
+    const languages = Object.values(country.languages).map(language => {
         return (
             <li key={language}>
                 {language}
             </li>
         )
     })
-    */
-    if(country === null || country === undefined) {
+    return languages
+}
+
+const Continents = ({ continents }) => {
+    const continentsString = continents.reduce((contString, continent) => {
+        return contString + continent + " "
+    }, "")
+    return continentsString
+}
+
+const Country = ({ country }) => {
+    if(country === null) {
         return <div>Nothing</div>
     }
 
     return (
         <div>
-            <h1>{country.name.common}</h1><h3>{country.name.official}</h3><br />
+            <div className={"country-name"}>
+                <h1>{country.name.common}</h1>
+                <h3><i>({country.name.official})</i></h3>
+            </div>
             <h4>Population: {country.population}</h4>
             <hr />
             <table>
                 <tbody>
                     <tr>
-                        <td>Continent</td>
-                        <td>{country.continent}</td>
+                        <td>Continent(s)</td>
+                        <td><Continents continents={country.continents} /></td>
                     </tr>
                     <tr>
                         <td>Region</td>
@@ -41,7 +53,7 @@ const Country = ({ country }) => {
             </table>
             <h3>Languages:</h3>
             <ul>
-                
+                <Languages country={country} />
             </ul>
             <h3>Flag</h3>
             <img src={country.flags.png} alt={country.flags.alt} />

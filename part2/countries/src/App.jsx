@@ -26,19 +26,16 @@ function App() {
   const getCountriesFiltered = () => {
     countriesAPI.getAll()
     .then(countriesAll => {
-      //console.log(countriesAll[0])
       let countriesFiltered = 
         countriesAll.filter(countryObj => {
           return (countryObj.name.common.toLowerCase().includes(country.toLowerCase())
             || countryObj.name.official.toLowerCase().includes(country.toLowerCase()))
         })
-      //console.log(countriesFiltered)
       setCountries(countriesFiltered)
       return countriesFiltered
     })
     .then(countriesFiltered => {
       if (countriesFiltered.length === 1) {
-        console.log("Getting 1...")
         return countriesAPI.get(countriesFiltered[0].name.common)
       }
       else {
@@ -46,7 +43,6 @@ function App() {
       }
     })
     .then(countryRetrieved => {
-      console.log("countryRetrieved get()", countryRetrieved)
       countryRetrieved === null ? setCurrentCountry(null) : setCurrentCountry(countryRetrieved)
     })
   }

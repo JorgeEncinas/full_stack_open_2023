@@ -4,7 +4,6 @@ const Countries = ({ countries, currentCountry }) => {
     if (countries === null) {
         return <div>Go ahead, search for a country!</div>
     }
-    console.log("currentCountry", currentCountry)
     const lngth = countries.length
 
     if (lngth > 10){
@@ -14,11 +13,10 @@ const Countries = ({ countries, currentCountry }) => {
             </div>
         )
     } else if (lngth > 1) {
-        //console.log(countries)
         const countriesDisplay = countries.map(country => {
             return (
             <tr key={country.name.common}>
-                <td >{country.name.common}</td>
+                <td ><b>{country.name.common}</b> (<i>{country.name.official}</i>)</td>
             </tr>
             )
         })
