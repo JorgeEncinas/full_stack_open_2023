@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react'
 import Countries from "./components/Countries"
 import countriesAPI from "./services/countriesAPI"
+import weatherAPI from "./services/weatherAPI"
 
 function App() {
   const [country, setCountry] = useState("")
   const [countries, setCountries] = useState(null)
   const [currentCountry, setCurrentCountry] = useState(null)
+  const [currentCountryWeather, setCurrentCountryWeather] = useState(null)
 
   const handleCountryChange = (event) => {
     setCurrentCountry(null)
+    setCurrentCountryWeather(null)
     setCountry(event.target.value)
   }
 
@@ -48,7 +51,23 @@ function App() {
     })
   }
 
+  const getCountryWeather = () => {
+    if(currentCountry === null) {
+      return undefined
+    }
+    weatherAPI.get(currentCountry)
+      .then(countryWeather => {
+        if (countryWeather !== null) {
+          setCurrentCountryWeather(countryWeather)
+        }
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+
   useEffect(getCountriesFiltered, [country])
+  useEffect(getCountryWeather, [currentCountry])
 
   return (
     <>
@@ -62,7 +81,7 @@ function App() {
       <div>
         <Countries 
           countries={countries} 
-          currentCountry={currentCountry}
+          currentCountryData = { { currentCountry, currentCountryWeather } }
           countryOperations={ {handleCountrySelect} }
         />
       </div>

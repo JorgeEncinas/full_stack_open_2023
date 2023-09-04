@@ -1,3 +1,9 @@
+html, body {
+    height: 100%;
+    width: 100%;
+    background-color:#b5fffe;
+}
+
 .country-name {
     display: flex;
     align-items:baseline;
@@ -5,4 +11,9 @@
 }
 .country-name h1 {
     margin-right: 10px;
+}
+.d-flex {
+    display: flex;
+    align-items:center;
+    justify-content: start;
 }

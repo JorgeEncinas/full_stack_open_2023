@@ -22,15 +22,18 @@ const CountryListDisplay = ({countries, countryOperations}) => {
     )
 }
 
-const Countries = ({ countries, currentCountry, countryOperations }) => {
+const Countries = ({ countries, currentCountryData, countryOperations }) => {
     if (countries === null) {
         return <div>Go ahead, search for a country!</div>
     }
     const lngth = countries.length
-    if(currentCountry !== null) {
+    if(currentCountryData.currentCountry !== null) {
         return (
             <>
-            <Country country={currentCountry} />
+            <Country
+                country={currentCountryData.currentCountry}
+                countryWeather={currentCountryData.currentCountryWeather}
+            />
             </>
         )
     }
