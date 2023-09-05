@@ -1,7 +1,10 @@
 const express = require("express")
 const app = express()
+const morgan = require("morgan")
+const morganmw = morgan("tiny")
 
 app.use(express.json())
+app.use(morganmw)
 
 let persons = [
     { 
