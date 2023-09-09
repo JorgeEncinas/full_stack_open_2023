@@ -1,7 +1,8 @@
 const express = require("express")
 const app = express()
 const morgan = require("morgan")
-const morganmw = morgan("tiny")
+//const morganmw = morgan("tiny")
+const cors = require("cors")
 morgan.token("post",
     (request, response) => {
         let contentString = ""
@@ -15,6 +16,8 @@ const morganNewTiny = morgan(":method :url :status :res[content-length] - :respo
 
 app.use(express.json())
 app.use(morganNewTiny)
+app.use(cors())
+app.use(express.static("dist"))
 
 let persons = [
     { 

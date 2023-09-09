@@ -127,7 +127,13 @@ const App = () => {
                 setPersons(persons.filter(person => {
                   return person.id !== existingPerson.id
                 }))
-              } else {
+              } else if (error.request.status === 400) {
+                  sendNotif(
+                    "msg-failure",
+                    `Name ${newName} already registered`
+                  )
+              }
+              else {
                 sendNotif(
                   "msg-failure",
                   `Couldn't update ${newName} to number ${newPhone}`
