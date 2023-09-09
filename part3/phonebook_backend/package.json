@@ -7,7 +7,8 @@
     "start": "node index.js",
     "test": "echo \"Error: no test was specified\" && exit 1",
     "dev": "nodemon index.js",
-    "build:ui": "rm -rf dist && cd ../phonebook_frontend && npm run build && cp -r dist ../phonebook_backend"
+    "build:ui": "rm -rf dist && cd ../phonebook_frontend && npm run build && cp -r dist ../phonebook_backend",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
   },
   "keywords": [
     "phonebook",
