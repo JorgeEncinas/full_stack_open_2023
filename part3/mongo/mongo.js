@@ -31,7 +31,7 @@ note2.save().then(result => {
     mongoose.connection.close()
 })*/
 
-Note.find({}).then(result => {
+Note.find({ important: true }).then(result => {
     result.forEach(note => {
         console.log(note)
     })
