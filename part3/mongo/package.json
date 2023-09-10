@@ -1,0 +1,17 @@
+{
+  "name": "mongo",
+  "version": "1.0.0",
+  "description": "Mongo following part3c",
+  "main": "mongo.js",
+  "scripts": {
+    "test": " echo \"Error: no test set\""
+  },
+  "keywords": [
+    "mongo"
+  ],
+  "author": "Jorge Encinas",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "mongoose": "^7.5.0"
+  }
+}
