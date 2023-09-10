@@ -2,6 +2,6 @@ POST https://fso-express-phonebook.onrender.com/api/persons
 Content-Type: application/json
 
 {
-    "name":"Johnny",
+    "name":"Johnny Quest",
     "number":"12-345"
 }
