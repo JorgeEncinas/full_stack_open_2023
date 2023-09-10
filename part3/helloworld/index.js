@@ -1,10 +1,15 @@
 const express = require("express")
 const cors = require("cors")
+
 const app = express()
 
 app.use(express.json())
 app.use(cors())
 
+const password = process.argv[2]
+console.log(password)
+
+const Note = require("./models/note")
 
 let notes = [
     {
@@ -39,7 +44,9 @@ app.get("/", (request, response) => {
 })
 
 app.get("/api/notes", (request, response) => {
-    response.json(notes)
+    Note.find({}).then(notes => {
+        response.json(notes)
+    })
 })
 
 app.get("/api/notes/:id", (request, response) => {
