@@ -100,28 +100,44 @@ app.post("/api/persons", (request, response) => {
             error:"No body."
         })
     }
-
     if (body.number === undefined || body.name === undefined
         || body.number === null || body.name === null) {
         return response.status(400).json({
             error: "Requires both 'name' and 'number'"
         })
     } else {
-        const nameExists = persons.find(person => {
-            return person.name === body.name
-        })
-        if (nameExists) {
-            return response.status(400).json({
-                error: "name is already registered"
-            })
-        }
-        const newPerson =   {
-            id: generateId(),
-            name: body.name,
+        Person.count({
+            name: body.name
+        }).then(nameCount => {
+            if(nameCount > 0) {
+                return response.status(400).json({
+                    error: "name is already registered"
+                })
+            }
+            return nameCount
+        }).then(nameCount => {
+            const numberCount = Person.count({
             number: body.number
-        } 
-        persons.push(newPerson)
-        return response.status(200).json(newPerson)
+            })
+            return 
+        }).then(numberCount => {
+            if (numberCount > 0) {
+                return response.status(400).json({
+                    error: "number is already registered"
+                })
+            }
+            return {nameCount, numberCount}
+        }).then(validObj => {
+            if (validObj.nameCount === 0 && validObj.numberCount === 0) {
+                const newPerson = Person({
+                    name: body.name,
+                    number: body.number
+                })
+                newPerson.save().then(savedPerson => {
+                    response.json(savedPerson)
+                })
+            }
+        })
     }
 })
 
