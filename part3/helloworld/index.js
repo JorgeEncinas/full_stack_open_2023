@@ -53,18 +53,12 @@ app.get("/api/notes/:id", (request, response) => {
 })
 
 app.delete("/api/notes/:id", (request, response) => {
-    const id = Number(request.params.id)
-    notes = notes.filter(note => note.id !== id)
-
-    response.status(204).end()
+    Note.findByIdAndDelete(request.params.id)
+        .then(result => {
+            response.status(204).end()
+        })
+        .catch(error => next(error))
 })
-
-const generateId = () => {
-    const maxId = notes.length > 0
-        ? Math.max(...notes.map(note => note.id))
-        : 0
-    return maxId + 1;
-}
 
 app.post("/api/notes", (request, response) => {
     const body = request.body
@@ -81,6 +75,27 @@ app.post("/api/notes", (request, response) => {
     note.save().then(savedNote => {
         response.json(savedNote)
     })
+})
+
+app.put("/api/notes/:id", (request, response) => {
+    const body = request.body
+
+    /* Apparently they don't do this?
+    const note = new Note({
+        content: body.content,
+        important: body.important || false
+    }) */
+    
+    const note = {
+        content: body.content,
+        important: body.important
+    }
+
+    Note.findByIdAndUpdate(request.params.id, note, {new: true}) //new: true is to get the updated Note, and not the OG.
+        .then(updatedNote => {
+            response.json(updatedNote)
+        })
+        .catch(error => next(error))
 })
 
 const unknownEndPoint = (request, response) => {

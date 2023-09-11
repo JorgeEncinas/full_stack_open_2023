@@ -1,0 +1,9 @@
+PUT http://localhost:3001/api/notes/64fd0e2eba9b0bc1e1d5e3bf
+Content-Type: application/json
+
+{
+    "content":"This note was changed",
+    "important": false
+}
+###
+GET http://localhost:3001/api/notes/64fd0e2eba9b0bc1e1d5e3bf
