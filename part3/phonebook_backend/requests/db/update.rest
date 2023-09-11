@@ -1,0 +1,17 @@
+GET http://localhost:3001/api/persons/64fdf0aa67c71497849cc11a
+###
+PUT http://localhost:3001/api/persons/64fdf0aa67c71497849cc11a
+Content-Type: application/json
+
+{
+    "number": "987-654"
+}
+###
+GET http://localhost:3001/api/persons/64fe253252c9019fd370cb5d
+###
+PUT http://localhost:3001/api/persons/64fe253252c9019fd370cb5d
+Content-Type: application/json
+
+{
+    "number": "33333"
+}

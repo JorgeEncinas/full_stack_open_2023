@@ -1,4 +1,5 @@
 require("dotenv").config()
+const PORT = process.env.PORT || 3001;
 const express = require("express")
 const app = express()
 const morgan = require("morgan")
@@ -7,7 +8,7 @@ const cors = require("cors")
 morgan.token("post",
     (request, response) => {
         let contentString = ""
-        if(request.method == "POST") {
+        if(request.method == "POST" || request.method == "PUT") {
             contentString = JSON.stringify(request.body)
         }
         return contentString
@@ -20,28 +21,15 @@ app.use(morganNewTiny)
 app.use(cors())
 app.use(express.static("dist"))
 
-let persons = [
-    { 
-      "id": 1,
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": 2,
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": 3,
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": 4,
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
+const errorHandler = (error, request, response, next) => {
+    console.log(error.message)
+    if(error.name === "CastError") {
+        return response.status(400).send({
+            error:"Your request had the wrong format."
+        })
     }
-]
+    next(error) //Pass it to the default errHandler?
+}
 
 app.get("/api/persons", (request, response) => {
     Person.find({}).then(persons => {
@@ -59,7 +47,7 @@ app.get("/info", (request, response) => {
         return response.send(info)
     })
     .catch(error => {
-        console.log("Error fetching info", error)
+        next(error)
     })
 })
 
@@ -73,20 +61,20 @@ app.get("/api/persons/:id", (request, response) => {
             }
         })
         .catch(error => {
-            console.log("Error finding person:", error.message)
-            return response.status(404).end()
+            next(error)
         })
 })
 
 app.delete("/api/persons/:id", (request, response) => {
-    const id = Number(request.params.id)
-    const originalLength = persons.length
-    persons = persons.filter(person => person.id !== id)
-    if (persons.length < originalLength) {
-        return response.status(204).end()
-    } else {
-        return response.status(404).end()
-    }
+    Person.findByIdAndDelete(request.params.id)
+        .then(result => {
+            if(result === null) {
+                response.status(404).end()
+            } else {
+                response.status(204).end()
+            }
+        })
+        .catch(error => next(error))
 })
 
 const generateId = () => {
@@ -113,8 +101,40 @@ app.post("/api/persons", (request, response) => {
         newPerson.save().then(savedPerson => {
             return response.json(savedPerson)
         })
+        .catch(error => {
+            next(error)
+        })
     }
 })
 
-const PORT = process.env.PORT || 3001;
+app.put("/api/persons/:id", (request, response) => {
+    const body = request.body
+
+    if (!body) {
+        response.status(400).json({
+            error: "Person content was missing"
+        })
+    } else {
+        console.log(body)
+        if(body.number) {
+            const editPerson = {
+                //name: body.name,
+                number: body.number
+            }
+            Person.findByIdAndUpdate(request.params.id,
+                editPerson,
+                {new: true})
+                .then(updatedPerson => {
+                    response.json(updatedPerson)
+                })
+                .catch(error => next(error))
+        } else {
+            response.status(400).json({
+                error: "Missing attributes"
+            })
+        }
+    }
+})
+
+app.use(errorHandler)
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
