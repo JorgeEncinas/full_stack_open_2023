@@ -11,7 +11,14 @@ app.use(cors())
 const password = process.argv[2]
 console.log(password)
 
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+    if(error.name === "CastError") {
+        return response.status(400).send({error: "malformatted id"})
+    }
 
+    next(error)
+}
 
 //Middleware is a fn that receives 3 parameters
 const requestLogger = (request, response, next) => {
@@ -35,11 +42,14 @@ app.get("/api/notes", (request, response) => {
 
 app.get("/api/notes/:id", (request, response) => {
     Note.findById(request.params.id).then(retrievedNote => {
-        response.json(retrievedNote)
+        if(retrievedNote) {
+            response.json(retrievedNote)
+        } else {
+            response.status(404).end()
+        }
+        
     })
-    .catch(error => {
-        console.log("Error: ", error.message)
-    })
+    .catch(error => next(error))
 })
 
 app.delete("/api/notes/:id", (request, response) => {
@@ -78,7 +88,9 @@ const unknownEndPoint = (request, response) => {
         error: "Unknown endpoint"
     })
 }
+
 app.use(unknownEndPoint)
+app.use(errorHandler)
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
