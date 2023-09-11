@@ -5,3 +5,9 @@ Content-Type: application/json
     "name":"Johnny Quest",
     "number":"12-345"
 }
+###
+GET https://fso-express-phonebook.onrender.com/api/persons
+###
+DELETE http://localhost:3001/api/persons/64ff94ec993d4db627849512
+###
+GET http://localhost:3001/api/persons/64fe68b8fbc743a70f787760
