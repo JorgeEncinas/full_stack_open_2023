@@ -1,0 +1,14 @@
+{
+  "name": "blog_backend",
+  "version": "1.0.0",
+  "description": "A blog list application",
+  "main": "index.js",
+  "scripts": {
+    "start":"node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev":"nodemon index.js",
+    "lint":"eslint ."
+  },
+  "author": "Jorge Encinas",
+  "license": "UNLICENSED"
+}
