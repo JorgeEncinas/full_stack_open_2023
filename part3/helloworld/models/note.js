@@ -3,7 +3,11 @@ const mongoose = require("mongoose")
 const url = process.env.MONGODB_URI_NOTES
 
 const noteSchema = new mongoose.Schema({
-    content: String,
+    content: {
+        type: String,
+        minLength: 5,
+        required: true
+    },
     important: Boolean,
 })
 

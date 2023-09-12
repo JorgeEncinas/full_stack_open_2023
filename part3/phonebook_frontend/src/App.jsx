@@ -23,8 +23,9 @@ const App = () => {
 
   useEffect(fetchPeople,[])
 
+  //console.log("running")
   
-  const sendNotif = (newClassesString, message, timeOutMS=5000) => {
+  const sendNotif = (newClassesString, message, timeOutMS=9000) => {
     setNotifClasses(newClassesString)
     setNotifMessage(message)
     setTimeout(() => {
@@ -101,6 +102,7 @@ const App = () => {
         const confirmPhoneChangeMessage = `"${existingPerson.name}" has already been added 
         with number "${existingPerson.number}". Do you want to change their 
         number to "${newPhone}"?`
+        //console.log("heeeeeeere!");
         if (window.confirm(confirmPhoneChangeMessage)) {
             existingPerson.number = newPhone
             jsonDB.updatePerson(
@@ -118,26 +120,21 @@ const App = () => {
               )
             })
             .catch(error => {
-              //console.log(error)
+              //console.log("ERROR ON FRONTEND:",error)
               if(error.request.status === 404) {
                 sendNotif(
                   "msg-failure",
-                  `Person ${newName} was not found. Press "add" again to add them.`
+                  `Person ${newName} was not found. Press "add" again to add them. \n
+                  Error: ${error.response.data.error}`
                 )
                 setPersons(persons.filter(person => {
                   return person.id !== existingPerson.id
                 }))
-              } else if (error.request.status === 400) {
+              } else {
                   sendNotif(
                     "msg-failure",
-                    `Name ${newName} already registered`
+                    `Error: ${error.response.data.error}`
                   )
-              }
-              else {
-                sendNotif(
-                  "msg-failure",
-                  `Couldn't update ${newName} to number ${newPhone}`
-                )
               }
             })
             
@@ -157,10 +154,10 @@ const App = () => {
           )
         })
         .catch(error => {
-          //console.log(error)
           sendNotif(
             "msg-failure",
-            `Person '${newName}' with number '${newPhone} couldn't be added.'`
+            `Person '${newName}' with number '${newPhone}' couldn't be added. \n
+            Error: ${error.response.data.error}`
           )
         })      
       } else {
@@ -203,10 +200,10 @@ const App = () => {
         } else {
           sendNotif(
             "msg-failure",
-            `Unexpected error encountered`
+            `Unexpected error encountered. \n
+            Error: ${error.response.data.error}`
           )
         }
-        //console.log(error)
       })
     }
   }

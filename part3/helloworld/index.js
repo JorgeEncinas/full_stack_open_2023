@@ -15,6 +15,8 @@ const errorHandler = (error, request, response, next) => {
     console.error(error.message)
     if(error.name === "CastError") {
         return response.status(400).send({error: "malformatted id"})
+    } else if (error.name === "ValidationError") {
+        return response.status(400).json({error: error.message})
     }
 
     next(error)
@@ -67,7 +69,7 @@ app.delete("/api/notes/:id", (request, response) => {
 
 app.post("/api/notes", (request, response) => {
     const body = request.body
-    if (!body.content) {
+    if (body.content === undefined) { //undefined and null are both falsey
         return response.status(400).json({
             error: "'content' property is missing"
         })
@@ -80,6 +82,7 @@ app.post("/api/notes", (request, response) => {
     note.save().then(savedNote => {
         response.json(savedNote)
     })
+    .catch(error => next(error))
 })
 
 app.put("/api/notes/:id", (request, response) => {
@@ -95,8 +98,14 @@ app.put("/api/notes/:id", (request, response) => {
         content: body.content,
         important: body.important
     }
+    //A new way:
+    //const {content, important} = request.body
 
-    Note.findByIdAndUpdate(request.params.id, note, {new: true}) //new: true is to get the updated Note, and not the OG.
+    Note.findByIdAndUpdate(
+        request.params.id, 
+        note,
+        //{content, important} //from "A new way"
+        {new: true, runValidators: true, context: 'query'}) //new: true is to get the updated Note, and not the OG.
         .then(updatedNote => {
             response.json(updatedNote)
         })

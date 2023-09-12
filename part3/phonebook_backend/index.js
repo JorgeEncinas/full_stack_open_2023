@@ -27,6 +27,11 @@ const errorHandler = (error, request, response, next) => {
         return response.status(400).send({
             error:"Your request had the wrong format."
         })
+    } else if (error.name === "ValidationError") {
+        //console.log(error)
+        return response.status(400).json({
+            error: error.message
+        })
     }
     next(error) //Pass it to the default errHandler?
 }
@@ -37,7 +42,7 @@ app.get("/api/persons", (request, response) => {
     })
 })
 
-app.get("/info", (request, response) => {
+app.get("/info", (request, response, next) => {
     Person.find({}).then(persons => {
         const info = `
         <p>Phonebook has info for ${persons.length} ${persons.length === 1 ? "person" : "people"}</p>
@@ -51,7 +56,7 @@ app.get("/info", (request, response) => {
     })
 })
 
-app.get("/api/persons/:id", (request, response) => {
+app.get("/api/persons/:id", (request, response, next) => {
     Person.findById(request.params.id)
         .then(retrievedPerson => {
             if(retrievedPerson) {
@@ -65,7 +70,7 @@ app.get("/api/persons/:id", (request, response) => {
         })
 })
 
-app.delete("/api/persons/:id", (request, response) => {
+app.delete("/api/persons/:id", (request, response, next) => {
     Person.findByIdAndDelete(request.params.id)
         .then(result => {
             if(result === null) {
@@ -81,7 +86,7 @@ const generateId = () => {
     return Math.floor(Math.random()*100000)
 }
 
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", (request, response, next) => {
     const body = request.body
     if(!body) {
         return response.status(400).json({
@@ -107,7 +112,7 @@ app.post("/api/persons", (request, response) => {
     }
 })
 
-app.put("/api/persons/:id", (request, response) => {
+app.put("/api/persons/:id", (request, response, next) => {
     const body = request.body
 
     if (!body) {
@@ -123,7 +128,7 @@ app.put("/api/persons/:id", (request, response) => {
             }
             Person.findByIdAndUpdate(request.params.id,
                 editPerson,
-                {new: true})
+                {new: true, runValidators: true, context: 'query'})
                 .then(updatedPerson => {
                     response.json(updatedPerson)
                 })
