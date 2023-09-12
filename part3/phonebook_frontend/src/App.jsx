@@ -174,7 +174,7 @@ const App = () => {
     if (window.confirm(`Are you sure you want to delete ${name} from the Phonebook?`)) {
       jsonDB.deletePerson(id)
       .then(status => {
-        if (status === 200) {
+        if (status === 204) {
           sendNotif(
             "msg-success",
             `deleted ${name} successfully`
