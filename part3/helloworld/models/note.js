@@ -21,7 +21,7 @@ mongoose.connect(url)
     })
 
 //Also consider the more "universal" "toObject"
-noteSchema.set('toJSON', {
+noteSchema.set("toJSON", {
     transform: (document, returnedObject) => {
         returnedObject.id = returnedObject._id.toString()
         delete returnedObject._id
