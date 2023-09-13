@@ -1,4 +1,4 @@
-require("./logger")
+const logger = require("./logger")
 
 //Middleware is a fn that receives 3 parameters
 const requestLogger = (request, response, next) => {
@@ -16,7 +16,7 @@ const unknownEndPoint = (request, response) => {
 }
 
 const errorHandler = (error, request, response, next) => {
-    console.error(error.message)
+    logger.error(error.message)
     if(error.name === "CastError") {
         return response.status(400).send({ error: "malformatted id" })
     } else if (error.name === "ValidationError") {

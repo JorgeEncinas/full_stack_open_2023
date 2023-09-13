@@ -4,11 +4,21 @@
   "description": "A blog list application",
   "main": "index.js",
   "scripts": {
-    "start":"node index.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev":"nodemon index.js",
-    "lint":"eslint ."
+    "dev": "nodemon index.js",
+    "lint": "eslint ."
   },
   "author": "Jorge Encinas",
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mongoose": "^7.5.1"
+  },
+  "devDependencies": {
+    "dotenv": "^16.3.1",
+    "eslint": "^8.49.0",
+    "nodemon": "^3.0.1"
+  }
 }
