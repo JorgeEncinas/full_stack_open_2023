@@ -22,9 +22,10 @@ app.use(express.static("build"))
 app.use(cors())
 app.use(middleware.requestLogger)
 
+app.use("/api/notes", notesRouter)
 
 app.use(middleware.unknownEndPoint)
 app.use(middleware.errorHandler)
-app.use("/api/notes", notesRouter)
+
 
 module.exports = app
