@@ -48,3 +48,11 @@ test("a specific note is within the returned notes", async () => {
 afterAll(async () => {
     await mongoose.connection.close()
 })
+/* NOTES: run specific tests through commands
+    npm test -- tests/note_api.test.js                                  JUST A FILE
+    npm test -- -t "a specific note is within the returned notes"       SPECIFIC NAME OR DESCRIBE BLOCK
+    npm test -- -t 'notes'                                              All tests that contain "notes" in their name
+
+    Careful that the Mongoose Connection doesn't stay open if NO TESTS using the connection are run.
+    Might be bc supertest primes the connection, but Jest doesn't run "afterAll"
+*/
