@@ -7,12 +7,25 @@ const Note = require("../models/note")
 
 beforeEach( async () => {
     await Note.deleteMany({})
-
-    let noteObject = new Note(helper.initialNotes[0])
-    await noteObject.save()
-
-    noteObject = new Note(helper.initialNotes[1])
-    await noteObject.save()
+    console.log("cleared")
+    /* BAD SOLUTION: Creates an async process per noteObject
+    helper.initialNotes.forEach( async (note) => {
+        let noteObject = new Note(note)
+        await noteObject.save()
+        console.log("saved")
+    }) */
+    /* SITUATIONAL SOLUTION
+    const noteObjects = helper.initialNotes
+        .map(note => new Note(note))
+    const promiseArray = noteObjects.map(note => note.save())
+    await Promise.all(promiseArray) */
+    //you can use const result = await Promise.all() to get an array with the resolved values for each promise
+    //But executes promises it receives in parallel, so if a particular order is needed, it will be a problem.
+    for (let note of helper.initialNotes) {
+        let noteObject = new Note(note)
+        await noteObject.save()
+    }
+    console.log("done")
 })
 
 afterAll(async () => {
@@ -20,6 +33,7 @@ afterAll(async () => {
 })
 
 test("notes are returned as json", async () => {
+    console.log("entered test")
     await api
         .get("/api/notes")
         .expect(200)
