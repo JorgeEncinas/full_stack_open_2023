@@ -20,11 +20,12 @@ notesRouter.get("/:id", async (request, response, next) => {
 })
 
 notesRouter.delete("/:id", async (request, response, next) => {
-    try {
-        await Note.findByIdAndRemove(request.params.id)
+    const query = await Note.findByIdAndRemove(request.params.id)
+    const removedDoc = await query.exec()
+    if(removedDoc) {
         response.status(204).end()
-    } catch (exception) {
-        next(exception)
+    } else {
+        response.status(404).end()
     }
 })
 
