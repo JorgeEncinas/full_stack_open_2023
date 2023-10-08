@@ -13,7 +13,7 @@ beforeAll( async () => {
 
 beforeEach( async () => {
 	await db.clear()
-	console.log(helper.initialBlogs)
+	//console.log(helper.initialBlogs)
 	for(let item of helper.initialBlogs) {
 		let blogObj = new Blog(item)
 		await blogObj.save()
@@ -110,7 +110,7 @@ describe('Addition of a blog', () => {
 	})
 })
 
-describe.only('Deletion of a blog', () => {
+describe('Deletion of a blog', () => {
 	test('Delete one blog', async () => {
 		const responseGETAllBeforeDelete = await api.get('/api/blogs')
 			.expect(200)
@@ -127,6 +127,75 @@ describe.only('Deletion of a blog', () => {
 
 		await api.get(`/api/blogs/${firstBlog.id}`)
 			.expect(404)
+	})
+})
+
+describe.only('Updating a blog', () => {
+	test('Update many blog attributes at once', async () => {
+		const response = await api.get('/api/blogs')
+			.expect(200)
+		const blogs = response.body
+		const firstBlog = blogs[0]
+		const editedBlog = {
+			title: 'new title',
+			author: 'jest-updated',
+			likes: 13
+		}
+		expect(firstBlog.title).not.toBe(editedBlog.title)
+		expect(firstBlog.author).not.toBe(editedBlog.author)
+		expect(firstBlog.likes).not.toBe(editedBlog.likes)
+		const responsePUT = await api.put(`/api/blogs/${firstBlog.id}`)
+			.send(editedBlog)
+			.expect(200)
+		const updatedBlog = new Blog(responsePUT.body)
+		expect(updatedBlog.title).toEqual(editedBlog.title)
+		expect(updatedBlog.author).toEqual(editedBlog.author)
+		expect(updatedBlog.likes).toEqual(editedBlog.likes)
+	})
+	test('Update title only', async () => {
+		const response = await api.get('/api/blogs')
+			.expect(200)
+		const blogs = response.body
+		const firstBlog = blogs[0]
+		const editedBlog = {
+			title: 'new title'
+		}
+		expect(firstBlog.title).not.toBe(editedBlog.title)
+		const responsePUT = await api.put(`/api/blogs/${firstBlog.id}`)
+			.send(editedBlog)
+			.expect(200)
+		const updatedBlog = new Blog(responsePUT.body)
+		expect(updatedBlog.title).toEqual(editedBlog.title)
+	})
+	test('Update likes only', async () => {
+		const response = await api.get('/api/blogs')
+			.expect(200)
+		const blogs = response.body
+		const firstBlog = blogs[0]
+		const editedBlog = {
+			likes: 13
+		}
+		expect(firstBlog.likes).not.toBe(editedBlog.likes)
+		const responsePUT = await api.put(`/api/blogs/${firstBlog.id}`)
+			.send(editedBlog)
+			.expect(200)
+		const updatedBlog = new Blog(responsePUT.body)
+		expect(updatedBlog.likes).toEqual(editedBlog.likes)
+	})
+	test('Update author only', async () => {
+		const response = await api.get('/api/blogs')
+			.expect(200)
+		const blogs = response.body
+		const firstBlog = blogs[0]
+		const editedBlog = {
+			author: 'jest-updated'
+		}
+		expect(firstBlog.likes).not.toBe(editedBlog.likes)
+		const responsePUT = await api.put(`/api/blogs/${firstBlog.id}`)
+			.send(editedBlog)
+			.expect(200)
+		const updatedBlog = new Blog(responsePUT.body)
+		expect(updatedBlog.author).toEqual(editedBlog.author)
 	})
 })
 
