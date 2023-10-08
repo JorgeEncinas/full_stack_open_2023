@@ -26,6 +26,7 @@ afterAll( async () => {
 
 test('HTTP GET /api/blogs', async () => {
 	const response = await api.get('/api/blogs')
+		.expect(200)
 	expect(response.body).toHaveLength(helper.initialBlogs.length)
 }, 10000)
 
@@ -34,4 +35,27 @@ test('Verify ID is defined', async () => {
 	for(const blog of response.body) {
 		expect(blog.id).toBeDefined()
 	}
+})
+test.only('HTTP POST request is successful', async () => {
+	const newBlog = {
+		title:'Jest post',
+		author:'Superagent',
+		url:'superagent-can-post',
+		likes:4
+	}
+
+	const response = await api.post('/api/blogs')
+		.send(newBlog)
+		.expect(201)
+		.expect('Content-Type',/application\/json/)
+	const noteSaved = JSON.parse(response.text)
+
+	const responseGETAll = await api.get('/api/blogs')
+		.expect(200)	
+	expect(JSON.parse(responseGETAll.text)).toHaveLength(helper.initialBlogs.length+1)
+
+	const responseGET = await api
+		.get(`/api/blogs/${noteSaved.id}`)
+	const findBlog = JSON.parse(responseGET.text)
+	expect(findBlog).toEqual(noteSaved)
 })
