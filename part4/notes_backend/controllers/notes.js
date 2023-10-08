@@ -16,10 +16,12 @@ notesRouter.get("/:id", async (request, response) => {
 })
 
 notesRouter.delete("/:id", async (request, response) => {
-    const query = await Note.findByIdAndRemove(request.params.id)
-    const removedDoc = await query.exec()
-    if(removedDoc) {
-        response.status(204).end()
+    const rawDocument = await Note.findByIdAndRemove(request.params.id)
+    if(rawDocument) {
+        const parsedNote = new Note(rawDocument)
+        if (parsedNote.id === request.params.id) response.status(204).end()
+        else response.status(500).end()
+        //response.status(204).end()
     } else {
         response.status(404).end()
     }

@@ -7,7 +7,7 @@ const Note = require("../models/note")
 
 beforeEach( async () => {
     await Note.deleteMany({})
-    console.log("cleared")
+    //console.log("cleared")
     /* BAD SOLUTION: Creates an async process per noteObject
     helper.initialNotes.forEach( async (note) => {
         let noteObject = new Note(note)
@@ -27,7 +27,7 @@ beforeEach( async () => {
         await noteObject.save()
     } */
     await Note.insertMany(helper.initialNotes)
-    console.log("done")
+    //console.log("done")
 })
 
 afterAll(async () => {
@@ -82,7 +82,7 @@ describe("addition of a new note", () => {
         await api
             .post("/api/notes")
             .send(newNote)
-            .expect(200)
+            .expect(201)
             .expect("Content-Type", /application\/json/)
 
         const notesAtEnd = await helper.notesInDb()//api.get("/api/notes/")
