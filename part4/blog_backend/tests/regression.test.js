@@ -79,7 +79,7 @@ test('if likes are missing, it defaults to 0', async () => {
 	expect(noteRetrieved.likes).toBe(0)
 })
 
-test.only('if title is missing, returns 400', async () => {
+test('if title is missing, returns 400', async () => {
 	const newBlog = {
 		author:'Superagent',
 		url:'superagent-can-post',
@@ -91,7 +91,7 @@ test.only('if title is missing, returns 400', async () => {
 		.expect(400)
 })
 
-test.only('if url is missing, returns 400', async () => {
+test('if url is missing, returns 400', async () => {
 	const newBlog = {
 		title:'Jest post',
 		author:'Superagent',
