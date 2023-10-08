@@ -28,3 +28,10 @@ test('HTTP GET /api/blogs', async () => {
 	const response = await api.get('/api/blogs')
 	expect(response.body).toHaveLength(helper.initialBlogs.length)
 }, 10000)
+
+test('Verify ID is defined', async () => {
+	const response = await api.get('/api/blogs')
+	for(const blog of response.body) {
+		expect(blog.id).toBeDefined()
+	}
+})
