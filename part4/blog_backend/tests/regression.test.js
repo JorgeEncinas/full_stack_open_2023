@@ -60,7 +60,7 @@ test('HTTP POST request is successful', async () => {
 	expect(findBlog).toEqual(noteSaved)
 })
 
-test.only('if likes are missing, it defaults to 0', async () => {
+test('if likes are missing, it defaults to 0', async () => {
 	const newBlog = {
 		title:'Jest post',
 		author:'Superagent',
@@ -77,4 +77,28 @@ test.only('if likes are missing, it defaults to 0', async () => {
 		.expect(200)
 	const noteRetrieved = JSON.parse(responseGet.text)
 	expect(noteRetrieved.likes).toBe(0)
+})
+
+test.only('if title is missing, returns 400', async () => {
+	const newBlog = {
+		author:'Superagent',
+		url:'superagent-can-post',
+		likes:4
+	}
+
+	await api.post('/api/blogs')
+		.send(newBlog)
+		.expect(400)
+})
+
+test.only('if url is missing, returns 400', async () => {
+	const newBlog = {
+		title:'Jest post',
+		author:'Superagent',
+		likes:4
+	}
+
+	await api.post('/api/blogs')
+		.send(newBlog)
+		.expect(400)
 })
