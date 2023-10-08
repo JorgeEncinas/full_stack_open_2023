@@ -36,7 +36,7 @@ test('Verify ID is defined', async () => {
 		expect(blog.id).toBeDefined()
 	}
 })
-test.only('HTTP POST request is successful', async () => {
+test('HTTP POST request is successful', async () => {
 	const newBlog = {
 		title:'Jest post',
 		author:'Superagent',
@@ -58,4 +58,23 @@ test.only('HTTP POST request is successful', async () => {
 		.get(`/api/blogs/${noteSaved.id}`)
 	const findBlog = JSON.parse(responseGET.text)
 	expect(findBlog).toEqual(noteSaved)
+})
+
+test.only('if likes are missing, it defaults to 0', async () => {
+	const newBlog = {
+		title:'Jest post',
+		author:'Superagent',
+		url:'superagent-can-post'
+	}
+
+	const response = await api.post('/api/blogs')
+		.send(newBlog)
+		.expect(201)
+		.expect('Content-Type', /application\/json/)
+	const blogSaved = JSON.parse(response.text) 
+
+	const responseGet = await api.get(`/api/blogs/${blogSaved.id}`)
+		.expect(200)
+	const noteRetrieved = JSON.parse(responseGet.text)
+	expect(noteRetrieved.likes).toBe(0)
 })
