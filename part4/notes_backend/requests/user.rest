@@ -1,0 +1,21 @@
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+    "username": "root",
+    "name": "Superuser",
+    "password": "salainen"
+}
+###
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+{
+    "content": "This note is not important, but I'll post it anyway",
+    "important": false,
+    "userId": "6523137639083c819c18bd79"
+}
+###
+GET http://localhost:3001/api/users
+###
+GET http://localhost:3001/api/notes
