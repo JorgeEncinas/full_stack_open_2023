@@ -1,0 +1,27 @@
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+    "username":"blue",
+    "name":"blue",
+    "password":"red"
+}
+###
+POST http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+    "username": "blue",
+    "password": "red"
+}
+###
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+Authorization: bearer 
+
+{
+    "title":"How I found out about JWTs",
+    "author":"JWT Connosseur",
+    "url": "about_jwts",
+    "likes": 0
+}
