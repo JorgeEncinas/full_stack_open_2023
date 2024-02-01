@@ -37,7 +37,7 @@ userSchema.set("toJSON", {
         returnedObj.id = returnedObj._id.toString()
         delete returnedObj._id
         delete returnedObj.__v
-        // the passwordHash should not be revealed
+        // don't reveal the password hash
         delete returnedObj.passwordHash
     }
 })

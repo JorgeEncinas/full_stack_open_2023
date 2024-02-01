@@ -16,6 +16,30 @@ blogsRouter.get('/', async (request, response) => {
 		.populate('user', { username: 1, name: 1})
 	response.json(blogs)
 })
+
+blogsRouter.post('/nojwt', async (request, response) => { // 4.17
+	const body = request.body
+	/*const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+	if (!decodedToken.id) {
+		return response.status(401).json({ error: 'token invalid' })
+	} */
+	/*
+	const user = await User.findById(decodedToken.id)
+	*/
+	const user = await User.findOne({})
+	const blog = new Blog({
+		title: body.title,
+		author: body.author,
+		url: body.url,
+		likes: 0,
+		user: user.id
+	})
+	const savedBlog = await blog.save()
+	user.blogs = user.blogs.concat(savedBlog._id)
+	await user.save()
+
+	response.status(201).json(savedBlog)
+})
   
 blogsRouter.post('/', async (request, response) => {
 	const body = request.body
@@ -34,7 +58,7 @@ blogsRouter.post('/', async (request, response) => {
 		author: body.author,
 		url: body.url,
 		likes: body.likes !== undefined ? body.likes : 0,
-		user: user._id
+		user: user.id
 	})
 
 	const savedBlog = await blog.save()

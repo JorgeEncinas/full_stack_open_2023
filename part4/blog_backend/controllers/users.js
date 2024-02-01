@@ -1,6 +1,7 @@
 const usersRouter = require('express').Router()
 const User = require('../models/user')
 const bcrypt = require('bcrypt')
+const { user:userVM } = require('../models/validationMsg')
 
 usersRouter.get('/', async (request, response) => {
 	const users = await User.find({})
@@ -12,8 +13,8 @@ usersRouter.get('/', async (request, response) => {
 
 usersRouter.get('/:id', async (request, response) => {
 	const user = await User.findById(request.params.id)
-	if (user) response.status(200).json(user)
-	else response.status(404).end()
+	if (user) { response.json(user) }
+	else { response.status(404).end() }
 })
 
 usersRouter.post('/', async (request, response) => {
@@ -24,6 +25,17 @@ usersRouter.post('/', async (request, response) => {
 		username: body.username,
 		name: body.name,
 		password: body.password,
+	}
+
+	if(!userForm.password) {
+		return response.status(400).json({
+			error: userVM.password.required
+		})
+	}
+	if (userForm.password.length < 3) {
+		return response.status(400).json({
+			error: userVM.password.minLength
+		})
 	}
 
 	const passwordHash = await bcrypt.hash(userForm.password, saltRounds)

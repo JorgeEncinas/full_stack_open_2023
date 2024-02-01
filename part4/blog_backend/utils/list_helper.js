@@ -1,4 +1,4 @@
-const dummy = (blogs) => {
+const dummy = () => {
 	return 1
 }
 
@@ -38,11 +38,11 @@ const favoriteBlog = (blogs) => {
 }
 
 const mostBlogs = (blogs) => {
-    ///Returns the author who has the largest amount of blogs.
-    ///If there's more than one, returns the first.
-    //Implementation idea: iterate once, saving each into a dictionary.
-    //Then just iterate over the values.
-    //Runtime O(2n) ---> O(n) (simplified)
+	///Returns the author who has the largest amount of blogs.
+	///If there's more than one, returns the first.
+	//Implementation idea: iterate once, saving each into a dictionary.
+	//Then just iterate over the values.
+	//Runtime O(2n) ---> O(n) (simplified)
 	let authors = {}
 	let most_blogs = 0
 	let winning_author = null
@@ -65,12 +65,12 @@ const mostBlogs = (blogs) => {
 }
 
 const mostLikes = (blogs) => {
-    ///Returns the author whose blog posts have the largest amount of likes (sum of all)
-    ///Also must contain the total number of likes on the answer
-    //Implementation idea: seems like an expansion of the previous
-    //ITERATION 1: In a dictionary, we use each person as key, and the value is the accumulator
-    //ITERATION 2: Get the highest likes. Save the index for it.
-    //Runtime: O(2n) ---> O(n) (simplified)
+	///Returns the author whose blog posts have the largest amount of likes (sum of all)
+	///Also must contain the total number of likes on the answer
+	//Implementation idea: seems like an expansion of the previous
+	//ITERATION 1: In a dictionary, we use each person as key, and the value is the accumulator
+	//ITERATION 2: Get the highest likes. Save the index for it.
+	//Runtime: O(2n) ---> O(n) (simplified)
 	let authors = {}
 	let most_likes = 0
 	let winning_author = null
@@ -96,6 +96,6 @@ module.exports = {
 	dummy,
 	totalLikes,
 	favoriteBlog,
-    mostBlogs,
-    mostLikes
+	mostBlogs,
+	mostLikes
 }

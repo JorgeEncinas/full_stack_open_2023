@@ -25,3 +25,52 @@ Authorization: bearer
     "url": "about_jwts",
     "likes": 0
 }
+###
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "username": "giorgio",
+    "name": "Giovanni Giorgio",
+    "password":"but evrbodycls me"
+}
+###
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+    "username":"giorgio",
+    "password":"but evrbodycls me"
+}
+###
+GET http://localhost:3003/api/blogs
+###
+POST http://localhost:3003/api/blogs/nojwt
+Content-Type: application/json
+
+{
+    "title":"A title for a random username means danger",
+    "author":"Jorge Luis Borges",
+    "url":"random_username"
+}
+###
+GET http://localhost:3003/api/users
+### This next one fails, appropriately.
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title":"Look at me I have no token!",
+    "author":"No-token evildoer",
+    "url":"no_token_evildoer"
+}
+### This one succeeds
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imdpb3JnaW8iLCJpZCI6IjY1YmIyMTZlMDFmZDgxMGM3YTlkMzdmMSIsImlhdCI6MTcwNjc2NDExNywiZXhwIjoxNzA2NzY3NzE3fQ.fcckTZHV4jnDuIEZOyPUURKSuS-Ryr9bDeyvR0s_ZwU
+
+{
+    "title":"JWT's and Me'",
+    "author":"James Wilson Theroux",
+    "url":"yes_my_name_is_jwt"
+}
