@@ -9,6 +9,14 @@ const requestLogger = (request, response, next) => {
 	next()
 }
 
+const tokenMiddleware = (request, response, next) => {
+	const authorization = request.get('authorization')
+	if(authorization && authorization.startsWith('Bearer ')) {
+		request['token'] = authorization.replace('Bearer ', '')
+	}
+	next()
+}
+
 const unknownEndPoint = (request, response) => {
 	response.status(404).send({
 		'error':'Could not find page'
@@ -41,4 +49,4 @@ const errorHandler = (error, request, response, next) => {
 	next(error)
 }
 
-module.exports = { unknownEndPoint, errorHandler, requestLogger }
+module.exports = { unknownEndPoint, errorHandler, requestLogger, tokenMiddleware }
