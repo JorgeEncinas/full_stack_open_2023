@@ -45,6 +45,7 @@ blogsRouter.post('/nojwt', async (request, response) => { // 4.17
   
 blogsRouter.post('/', middleware.userExtractorMW, async (request, response) => {
 	const body = request.body
+	console.log('token received in the blogs controller request: ', request.token)
 	const decodedToken = jwt.verify(
 		request.token,//getTokenFrom(request),
 		process.env.SECRET)
