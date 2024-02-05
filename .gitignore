@@ -40,3 +40,11 @@ packages/react-devtools-extensions/.tempUserDataDir
 packages/react-devtools-inline/dist
 packages/react-devtools-shell/dist
 packages/react-devtools-timeline/dist
+part4/notes_backend_redis/redis_commands.txt
+part4/notes_backend_redis/controllers/index.js
+part4/notes_backend_redis/requests/redis.rest
+part4/notes_backend_redis/views/index.html
+part4/blog_backend/tests/inspector.txt
+part4/blog_backend/controllers/login2.js
+part4/blog_backend/replacements.txt
+part4/blog_backend/logger.deprecated.txt
