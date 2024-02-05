@@ -1,5 +1,17 @@
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const fs = require('fs')
+
+const writeToFile = async (jsonObject) => {
+	const jsonString = JSON.stringify(jsonObject, null, 2)
+	fs.appendFile('./tests/inspector.txt', jsonString, (err) => {
+		if (err) {
+			console.log('Error appending contents to inspector file', err)
+		} else {
+			console.log('Object contents can be inspected at tests/inspector.txt')
+		}
+	})
+}
 
 const initialBlogs = [
 	{
@@ -28,6 +40,11 @@ const initialUsers = [
 		name: 'Andrew Cranston',
 		password: 'cranston111'
 	},
+	{
+		username: 'bobjohnson',
+		name: 'Bob Johnson',
+		password:'bobjohnson'
+	}
 ]
 
 const nonExistingId = async () => {
@@ -58,5 +75,6 @@ module.exports = {
 	initialUsers,
 	nonExistingId,
 	blogsInDb,
-	usersInDb
+	usersInDb,
+	writeToFile
 }

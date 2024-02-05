@@ -2,6 +2,7 @@ const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
+const { blog:blogVM } = require('../models/validationMsg')
 
 /*const getTokenFrom = request => {
 	const authorization = request.get('authorization')
@@ -43,12 +44,13 @@ blogsRouter.post('/nojwt', async (request, response) => { // 4.17
   
 blogsRouter.post('/', async (request, response) => {
 	const body = request.body
+	console.log('token received in the blogs controller request: ', request.token)
 	const decodedToken = jwt.verify(
 		request.token,//getTokenFrom(request),
 		process.env.SECRET)
 	if (!decodedToken.id) {
 		return response.status(401).json({
-			error: 'Token is Invalid.'
+			error: blogVM.user.invalidTokenParse
 		})
 	}
 	const user = await User.findById(decodedToken.id)
@@ -62,8 +64,11 @@ blogsRouter.post('/', async (request, response) => {
 	})
 
 	const savedBlog = await blog.save()
+	const savedBlogObj = savedBlog.toJSON()
 	user.blogs = user.blogs.concat(savedBlog._id)
-	response.status(201).json(savedBlog)
+	response.status(201)
+		//.header('Content-Type', 'application/json')
+		.json(savedBlogObj)
 })
 
 blogsRouter.get('/:id', async (request, response) => {
@@ -76,6 +81,22 @@ blogsRouter.get('/:id', async (request, response) => {
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
+	const blogRetrieved = await Blog.findById(request.params.id)
+
+	const decodedToken = jwt.verify(
+		request.token,
+		process.env.SECRET)
+	if (!decodedToken.id) {
+		return response.status(401).json({
+			error: blogVM.user.invalidTokenParse
+		})
+	}
+	if (blogRetrieved.user.toString() !== decodedToken.id) {
+		return response.status(401).json({
+			error: blogVM.user.userIsNotThePoster
+		})
+	}
+
 	const blogRaw = await Blog.findByIdAndRemove(request.params.id)
 	if (blogRaw) {
 		const blogParsed = new Blog(blogRaw)

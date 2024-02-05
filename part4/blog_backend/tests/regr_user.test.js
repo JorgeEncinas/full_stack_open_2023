@@ -5,7 +5,7 @@ const supertest = require('supertest')
 const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
-const { user: userVM } = require('../models/validationMsg')
+const { user: userVM, blog: blogVM } = require('../models/validationMsg')
 
 /* NOTES: run specific tests through commands
     npm test -- tests/note_api.test.js                                  JUST A FILE
@@ -333,7 +333,7 @@ describe('4.16 validate user creation w/status code and error messages', () => {
 	})
 })
 
-describe.only('4.18 user token is needed', () => {
+describe('4.18 user token is needed', () => {
 	test('Create blog without jwt fails', async () => {
 		const newBlog = {
 			title: 'I have no token!',
@@ -384,5 +384,94 @@ describe.only('4.18 user token is needed', () => {
 			.set('Authorization', `Bearer ${token}`)
 			.send(newBlog)
 			.expect(201)
+	})
+})
+
+describe.only('4.21 blog deleting restrictions', () => {
+	test('Delete fails if user is not the one that created the blog', async () => {
+		const loginForm = {
+			username: 'andrewcr',
+			password: 'cranston111'
+		}
+		
+		const loginRequest = await api
+			.post('/api/login')
+			.set('Content-Type', 'application/json')
+			.set('Accept', 'application/json')
+			.send(loginForm)
+			.expect(200)
+		const token = loginRequest.body.token
+
+		const newBlog = {
+			title: 'Some blog by Andrew Cranston',
+			url: 'andrew_cr_is_back',
+			author: 'Andrew Cranston'
+		}
+
+		const postBlogRequest = await api
+			.post('/api/blogs')
+			.set('Authorization', `Bearer ${token}`)
+			.set('Content-Type', 'application/json')
+			.set('Accept', 'application/json')
+			.send(newBlog)
+			.expect(201)
+			.expect('Content-Type', /application\/json/)
+			//.then(response => console.log(response.body))
+			//.catch(error => console.log(error))
+		const blogId = postBlogRequest.body.id
+		
+		const loginAsOtherUserForm = {
+			username:'bobjohnson',
+			password:'bobjohnson'
+		}
+		const loginRequestOtherUser = await api
+			.post('/api/login')
+			.set('Content-Type', 'application/json')
+			.send(loginAsOtherUserForm)
+			.expect(200)
+		
+		const otherUserToken = loginRequestOtherUser.body.token
+
+		const otherUserDeletesFirstUserBlog = await api
+			.delete(`/api/blogs/${blogId}`)
+			.set('Authorization', `Bearer ${otherUserToken}`)
+			.expect(401)
+
+		expect(otherUserDeletesFirstUserBlog.body).toEqual({
+			error: expect.stringContaining(blogVM.user.userIsNotThePoster)
+		})
+	})
+
+	test('Delete succeeds if user is the same as the blog user', async () => {
+		const loginForm = {
+			username: 'andrewcr',
+			password: 'cranston111'
+		}
+
+		const loginRequest = await api
+			.post('/api/login')
+			.send(loginForm)
+			.expect(200)
+
+		const userToken = loginRequest.body.token
+
+		const newBlog = {
+			title: 'newBlog',
+			url: 'userblog',
+			author: 'Andrew Cr'
+		}
+
+		const newBlogPost = await api
+			.post('/api/blogs')
+			.set('Authorization', `Bearer ${userToken}`)
+			.send(newBlog)
+			.expect(201)
+
+		const newBlogPostId = newBlogPost.body.id
+
+		await api
+			.delete(`/api/blogs/${newBlogPostId}`)
+			.set('Authorization', `Bearer ${userToken}`)
+			.expect(204)
 	})
 })
