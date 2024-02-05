@@ -3,6 +3,7 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 const { blog:blogVM } = require('../models/validationMsg')
+const middleware = require('../utils/middleware')
 
 /*const getTokenFrom = request => {
 	const authorization = request.get('authorization')
@@ -42,9 +43,8 @@ blogsRouter.post('/nojwt', async (request, response) => { // 4.17
 	response.status(201).json(savedBlog)
 })
   
-blogsRouter.post('/', async (request, response) => {
+blogsRouter.post('/', middleware.userExtractorMW, async (request, response) => {
 	const body = request.body
-	console.log('token received in the blogs controller request: ', request.token)
 	const decodedToken = jwt.verify(
 		request.token,//getTokenFrom(request),
 		process.env.SECRET)
@@ -53,7 +53,14 @@ blogsRouter.post('/', async (request, response) => {
 			error: blogVM.user.invalidTokenParse
 		})
 	}
-	const user = await User.findById(decodedToken.id)
+
+	if(!request.user) {
+		return response.status(401).json({
+			error: 'Custom error'
+		})
+	}
+	
+	const user = request.user
 
 	const blog = new Blog({
 		title: body.title,
@@ -80,18 +87,16 @@ blogsRouter.get('/:id', async (request, response) => {
 	}
 })
 
-blogsRouter.delete('/:id', async (request, response) => {
+blogsRouter.delete('/:id', middleware.userExtractorMW, async (request, response) => {
 	const blogRetrieved = await Blog.findById(request.params.id)
 
-	const decodedToken = jwt.verify(
-		request.token,
-		process.env.SECRET)
-	if (!decodedToken.id) {
+	if (!request.user) {
 		return response.status(401).json({
-			error: blogVM.user.invalidTokenParse
+			error: blogVM.user.required
 		})
 	}
-	if (blogRetrieved.user.toString() !== decodedToken.id) {
+	const user = request.user
+	if (blogRetrieved.user.toString() !== user.id) {
 		return response.status(401).json({
 			error: blogVM.user.userIsNotThePoster
 		})
@@ -106,7 +111,19 @@ blogsRouter.delete('/:id', async (request, response) => {
 	} else response.status(404).end()
 })
 
-blogsRouter.put('/:id', async (request, response) => {
+blogsRouter.put('/:id', middleware.userExtractorMW, async (request, response) => {
+	if (!request.user) {
+		return response.status(401).json({
+			error: blogVM.user.required
+		})
+	}
+	const user = request.user
+	const blogToUpdate = await Blog.findById(request.params.id)
+	if (blogToUpdate.user.toString() !== user.id) {
+		return response.status(401).json({
+			error: blogVM.user.userIsNotThePoster
+		})
+	}
 	const editedBlog = {
 		title: request.body.title,
 		author: request.body.author,

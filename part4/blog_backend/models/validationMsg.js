@@ -39,6 +39,6 @@ exports.blog = {
 		required: 'Blog must have a user associated to it.',
 		userExists: 'User does not exist.',
 		invalidTokenParse: 'Token is invalid',
-		userIsNotThePoster: 'Only the blog poster can delete their blogs.'
+		userIsNotThePoster: 'Only the blog poster can delete or modify their blogs.'
 	}
 }

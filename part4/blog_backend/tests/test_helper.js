@@ -44,6 +44,11 @@ const initialUsers = [
 		username: 'bobjohnson',
 		name: 'Bob Johnson',
 		password:'bobjohnson'
+	},
+	{
+		username: 'housemd',
+		name: 'Gregory House',
+		password: 'cuddy123'
 	}
 ]
 

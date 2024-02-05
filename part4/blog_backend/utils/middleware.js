@@ -1,4 +1,6 @@
 const logger = require('./logger')
+const jwt = require('jsonwebtoken')
+const User = require('../models/user')
 
 //Middleware is a fn that receives 3 parameters
 const requestLogger = (request, response, next) => {
@@ -9,7 +11,23 @@ const requestLogger = (request, response, next) => {
 	next()
 }
 
-const tokenMiddleware = (request, response, next) => {
+const userExtractorMW = async (request, response, next) => {
+	if(request.token) {
+		const decodedToken = jwt.verify(
+			request.token,
+			process.env.SECRET
+		)
+		if(decodedToken.id) {
+			const user = await User.findById(decodedToken.id)
+			if(user) {
+				request['user'] = user
+			}
+		}
+	}
+	next()
+}
+
+const tokenExtractorMW = (request, response, next) => {
 	const authorization = request.get('authorization') //it's lowercase on the request. I looked for it.
 	if(authorization && authorization.startsWith('Bearer ')) {
 		request['token'] = authorization.replace('Bearer ', '')
@@ -49,4 +67,10 @@ const errorHandler = (error, request, response, next) => {
 	next(error)
 }
 
-module.exports = { unknownEndPoint, errorHandler, requestLogger, tokenMiddleware }
+module.exports = {
+	unknownEndPoint,
+	errorHandler,
+	requestLogger,
+	tokenExtractorMW,
+	userExtractorMW
+}

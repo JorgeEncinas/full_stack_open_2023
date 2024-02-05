@@ -4,19 +4,66 @@ const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const db = require('./database')
+const { blog:blogVM } = require('../models/validationMsg')
+
+const bcrypt = require('bcrypt')
+const saltRounds = 10
 //JEST:  Run in band prevents running tests in parallel
 
+let authToken = 'not set'
+let userPasswdDict = {}
+
+const getUserTokenFromBlog = async (blog) => {
+	const blogUser = await User.findById(blog.user.id)
+	const loginAsUser = await api
+		.post('/api/login')
+		.send({
+			username:blogUser.username,
+			password:userPasswdDict[blogUser.username]
+		})
+		.expect(200)
+	const token = loginAsUser.body.token
+	return token
+}
 beforeAll( async () => {
 	await db.connect()
+	for (let user of helper.initialUsers) {
+		userPasswdDict[user.username] = user.password
+	}
 })
 
 beforeEach( async () => {
 	await db.clear()
 	//console.log(helper.initialBlogs)
+	let initialUsersWithIDs = []
+	for(let user of helper.initialUsers) {
+		let passwordHash = await bcrypt.hash(user.password,
+			saltRounds)
+		let userObj = new User({
+			username: user.username,
+			name: user.name,
+			passwordHash: passwordHash
+		})
+		await userObj.save()
+		initialUsersWithIDs.push(userObj)
+	}
 	for(let item of helper.initialBlogs) {
 		let blogObj = new Blog(item)
+		let randomIndex = Math.floor(Math.random() * initialUsersWithIDs.length)
+		blogObj.user = initialUsersWithIDs[randomIndex]
 		await blogObj.save()
+	}
+	const loginRequest = await api
+		.post('/api/login')
+		.send({
+			username:'andrewcr',
+			password:'cranston111'
+		})
+		.expect(200)
+	if(loginRequest.body.token) {
+		authToken = loginRequest.body.token
 	}
 })
 
@@ -52,6 +99,7 @@ describe('Addition of a blog', () => {
 	
 		const response = await api.post('/api/blogs')
 			.send(newBlog)
+			.set('Authorization', `Bearer ${authToken}`)
 			.expect(201)
 			.expect('Content-Type',/application\/json/)
 		const noteSaved = JSON.parse(response.text)
@@ -75,6 +123,7 @@ describe('Addition of a blog', () => {
 	
 		const response = await api.post('/api/blogs')
 			.send(newBlog)
+			.set('Authorization', `Bearer ${authToken}`)
 			.expect(201)
 			.expect('Content-Type', /application\/json/)
 		const blogSaved = JSON.parse(response.text) 
@@ -94,6 +143,7 @@ describe('Addition of a blog', () => {
 	
 		await api.post('/api/blogs')
 			.send(newBlog)
+			.set('Authorization', `Bearer ${authToken}`)
 			.expect(400)
 	})
 
@@ -106,8 +156,43 @@ describe('Addition of a blog', () => {
 	
 		await api.post('/api/blogs')
 			.send(newBlog)
+			.set('Authorization', `Bearer ${authToken}`)
 			.expect(400)
 	})
+	
+	test('401 status code if no token is provided', async () => {
+		const newBlog = {
+			title: 'blogggg',
+			url: 'blogggg',
+			author: 'gggg',
+			likes: 0
+		}
+		const response = await api.post('/api/blogs')
+			.send(newBlog)
+			.expect(401)
+		
+		expect(response.body).toEqual({
+			error: expect.stringContaining('jwt')
+		})
+	})
+
+	test('401 status code if token is not valid', async () => {
+		const newBlog = {
+			title: 'blogggg',
+			url: 'blogggg',
+			author: 'gggg',
+			likes: 0
+		}
+		const response = await api.post('/api/blogs')
+			.send(newBlog)
+			.set('Authorization', 'Bearer something')
+			.expect(401)
+	
+		expect(response.body).toEqual({
+			error: expect.stringContaining('malformed')
+		})
+	})
+	
 })
 
 describe('Deletion of a blog', () => {
@@ -116,7 +201,9 @@ describe('Deletion of a blog', () => {
 			.expect(200)
 		const blogs = responseGETAllBeforeDelete.body
 		const firstBlog = blogs[0]
+		const token = await getUserTokenFromBlog(firstBlog)
 		await api.delete(`/api/blogs/${firstBlog.id}`)
+			.set('Authorization', `Bearer ${token}`)
 			.expect(204)
 		//const blogDeletedRaw = JSON.parse(responseDelete.text)
 		//const blogDeletedObj = new Blog(blogDeletedRaw)
@@ -130,12 +217,13 @@ describe('Deletion of a blog', () => {
 	})
 })
 
-describe.only('Updating a blog', () => {
+describe('Updating a blog', () => {
 	test('Update many blog attributes at once', async () => {
 		const response = await api.get('/api/blogs')
 			.expect(200)
 		const blogs = response.body
 		const firstBlog = blogs[0]
+		const token = await getUserTokenFromBlog(firstBlog)
 		const editedBlog = {
 			title: 'new title',
 			author: 'jest-updated',
@@ -145,6 +233,8 @@ describe.only('Updating a blog', () => {
 		expect(firstBlog.author).not.toBe(editedBlog.author)
 		expect(firstBlog.likes).not.toBe(editedBlog.likes)
 		const responsePUT = await api.put(`/api/blogs/${firstBlog.id}`)
+			.set('Authorization', `Bearer ${token}`)
+			.set('Content-Type', 'application/json')
 			.send(editedBlog)
 			.expect(200)
 		const updatedBlog = new Blog(responsePUT.body)
@@ -157,11 +247,13 @@ describe.only('Updating a blog', () => {
 			.expect(200)
 		const blogs = response.body
 		const firstBlog = blogs[0]
+		const token = await getUserTokenFromBlog(firstBlog)
 		const editedBlog = {
 			title: 'new title'
 		}
 		expect(firstBlog.title).not.toBe(editedBlog.title)
 		const responsePUT = await api.put(`/api/blogs/${firstBlog.id}`)
+			.set('Authorization', `Bearer ${token}`)	
 			.send(editedBlog)
 			.expect(200)
 		const updatedBlog = new Blog(responsePUT.body)
@@ -172,11 +264,13 @@ describe.only('Updating a blog', () => {
 			.expect(200)
 		const blogs = response.body
 		const firstBlog = blogs[0]
+		const token = await getUserTokenFromBlog(firstBlog)
 		const editedBlog = {
 			likes: 13
 		}
 		expect(firstBlog.likes).not.toBe(editedBlog.likes)
 		const responsePUT = await api.put(`/api/blogs/${firstBlog.id}`)
+			.set('Authorization', `Bearer ${token}`)	
 			.send(editedBlog)
 			.expect(200)
 		const updatedBlog = new Blog(responsePUT.body)
@@ -187,11 +281,13 @@ describe.only('Updating a blog', () => {
 			.expect(200)
 		const blogs = response.body
 		const firstBlog = blogs[0]
+		const token = await getUserTokenFromBlog(firstBlog)
 		const editedBlog = {
 			author: 'jest-updated'
 		}
 		expect(firstBlog.likes).not.toBe(editedBlog.likes)
 		const responsePUT = await api.put(`/api/blogs/${firstBlog.id}`)
+			.set('Authorization', `Bearer ${token}`)
 			.send(editedBlog)
 			.expect(200)
 		const updatedBlog = new Blog(responsePUT.body)

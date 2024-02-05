@@ -62,7 +62,7 @@ describe('When there is one user in the db', () => {
 
 		const responseGetUser = await api
 			.get(`/api/users/${userAdded.id}`)
-		console.log(responseGetUser)
+		//console.log(responseGetUser)
 		const userRetrieved = JSON.parse(responseGetUser.text)
 		expect(userRetrieved).toEqual(userAdded)
 	})
@@ -72,7 +72,7 @@ describe('When there is one user in the db', () => {
 			.expect(200)
 		const existingUsers = existingUsersRequest.body
 		const oneUser = existingUsers[0]
-		console.log(oneUser)
+		//console.log(oneUser)
 
 		const newUser = {
 			username: oneUser.username,
@@ -387,7 +387,7 @@ describe('4.18 user token is needed', () => {
 	})
 })
 
-describe.only('4.21 blog deleting restrictions', () => {
+describe('4.21 blog deleting restrictions', () => {
 	test('Delete fails if user is not the one that created the blog', async () => {
 		const loginForm = {
 			username: 'andrewcr',
@@ -473,5 +473,109 @@ describe.only('4.21 blog deleting restrictions', () => {
 			.delete(`/api/blogs/${newBlogPostId}`)
 			.set('Authorization', `Bearer ${userToken}`)
 			.expect(204)
+	})
+})
+
+describe('4.22 blog updating restrictions', () => {
+	test('Update fails if user is not the one that created the blog', async () => {
+		const loginForm = {
+			username: 'andrewcr',
+			password: 'cranston111'
+		}
+		
+		const loginRequest = await api
+			.post('/api/login')
+			.set('Content-Type', 'application/json')
+			.set('Accept', 'application/json')
+			.send(loginForm)
+			.expect(200)
+		const token = loginRequest.body.token
+
+		const newBlog = {
+			title: 'Some blog by Andrew Cranston',
+			url: 'andrew_cr_is_back',
+			author: 'Andrew Cranston'
+		}
+
+		const postBlogRequest = await api
+			.post('/api/blogs')
+			.set('Authorization', `Bearer ${token}`)
+			.set('Content-Type', 'application/json')
+			.set('Accept', 'application/json')
+			.send(newBlog)
+			.expect(201)
+			.expect('Content-Type', /application\/json/)
+			//.then(response => console.log(response.body))
+			//.catch(error => console.log(error))
+		const blogId = postBlogRequest.body.id
+		
+		const loginAsOtherUserForm = {
+			username:'bobjohnson',
+			password:'bobjohnson'
+		}
+		const loginRequestOtherUser = await api
+			.post('/api/login')
+			.set('Content-Type', 'application/json')
+			.send(loginAsOtherUserForm)
+			.expect(200)
+		
+		const otherUserToken = loginRequestOtherUser.body.token
+
+		const updatedBlog = {
+			title:'Updated the title',
+			author:'updated author',
+			url:'updated_url',
+			likes: 999999
+		}
+
+		const otherUserDeletesFirstUserBlog = await api
+			.put(`/api/blogs/${blogId}`)
+			.set('Authorization', `Bearer ${otherUserToken}`)
+			.send(updatedBlog)
+			.expect(401)
+
+		expect(otherUserDeletesFirstUserBlog.body).toEqual({
+			error: expect.stringContaining(blogVM.user.userIsNotThePoster)
+		})
+	})
+	test('Update succeeds if user is the same as the blog user', async () => {
+		const loginForm = {
+			username: 'andrewcr',
+			password: 'cranston111'
+		}
+
+		const loginRequest = await api
+			.post('/api/login')
+			.send(loginForm)
+			.expect(200)
+
+		const userToken = loginRequest.body.token
+
+		const newBlog = {
+			title: 'newBlog',
+			url: 'userblog',
+			author: 'Andrew Cr'
+		}
+
+		const newBlogPost = await api
+			.post('/api/blogs')
+			.set('Authorization', `Bearer ${userToken}`)
+			.send(newBlog)
+			.expect(201)
+
+		const newBlogPostId = newBlogPost.body.id
+
+		const updatedBlog = {
+			title: 'newTitle',
+			author: 'someone else',
+			url:'yes_its_changed',
+			likes: 99999
+		}
+
+		await api
+			.put(`/api/blogs/${newBlogPostId}`)
+			.set('Authorization', `Bearer ${userToken}`)
+			.send(updatedBlog)
+			.expect(200)
 	})
 })
