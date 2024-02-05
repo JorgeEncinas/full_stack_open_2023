@@ -10,7 +10,7 @@ const requestLogger = (request, response, next) => {
 }
 
 const tokenMiddleware = (request, response, next) => {
-	const authorization = request.get('authorization')
+	const authorization = request.get('authorization') //it's lowercase on the request. I looked for it.
 	if(authorization && authorization.startsWith('Bearer ')) {
 		request['token'] = authorization.replace('Bearer ', '')
 	}

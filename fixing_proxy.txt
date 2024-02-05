@@ -1,0 +1,9 @@
+From this thread of comments https://stackoverflow.com/a/64525802
+I just ran the following:
+npm config delete proxy
+npm config delete http-proxy
+npm config delete https-proxy
+npm config rm proxy
+npm config rm https-proxy
+
+In that order, which I don't know if it's ideal. But it worked
