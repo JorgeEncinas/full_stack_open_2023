@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
-import Note from './components/Note'
 //import axios from 'axios'
-import noteService from "./services/notes"
 import Notification from "./components/Notification"
+import Note from './components/Note'
+import Login from './components/Login'
 import Footer from "./components/Footer"
+import noteService from "./services/notes"
 import loginService from './services/login'
 
 /*const promise = axios.get("http://localhost:3001/notes")
@@ -37,8 +38,6 @@ const App = () => {
   const [newNote, setNewNote] = useState("a new note...")
   const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState("some error happened...")
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
   const hook = () => {
@@ -51,25 +50,6 @@ const App = () => {
   useEffect(hook, [])
 
   //console.log("render", notes.length, "notes");
-
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    console.log('logging in with', username, password)
-    try {
-      const user = await loginService.login({
-        username: username,
-        password: password
-      })
-      setUser(user)
-      setUsername('')
-      setPassword('')
-    } catch (error) {
-      setErrorMessage('Wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-    }
-  }
 
   const notesToShow = showAll
     ? notes
@@ -116,38 +96,6 @@ const App = () => {
         setNotes(notes.filter(n => n.id !== id))
       })
   }
-  
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-    <div>
-      username
-      <input
-        type="text"
-        value={username}
-        name="Username"
-        onChange={({ target }) => setUsername(target.value)}
-      />
-    </div>
-    <div>
-      password
-      <input
-        type="password"
-        value={password}
-        name="Password"
-        onChange={({ target }) => setPassword(target.value)}
-      />
-    </div>
-    <button type="submit">login</button>
-  </form>
-  )
-
-  const noteForm = () => (
-    <form onSubmit={addNote}>
-    <input  value={newNote}
-            onChange={handleNoteChange} />
-    <button type="submit">save</button>
-  </form>
-  )
 
   /* "Suitable when it's impossible to define the state
   So that the INITIAL RENDERING IS POSSIBLE" -FSO, part 2e.
@@ -160,9 +108,14 @@ const App = () => {
       <Notification message={errorMessage} />
 
       { user === null ?
-        loginForm() :
+        <Login setUser={setUser} /> :
         "" }
-      { user!== null && noteForm() }
+      { user && 
+        <div>
+          <p>{user.name} logged in </p>
+            {noteForm()}
+        </div>
+      }
      
       <button onClick={() => setShowAll(!showAll)}>
         show {showAll ? "important" : "all"}
