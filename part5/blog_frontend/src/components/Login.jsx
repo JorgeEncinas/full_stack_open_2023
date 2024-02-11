@@ -43,8 +43,8 @@ const Login = ({ user, handleSetUser }) => {
                     onClick={logout}
                 >
                     Log out.
-                </button>
-            </div>
+                </button><br/><br/>
+            </div> 
         )
     }
 
@@ -62,7 +62,7 @@ const Login = ({ user, handleSetUser }) => {
                 <button>
                     Login
                 </button>
-            </form>
+            </form> <br/>
         </div>    
     )
 }

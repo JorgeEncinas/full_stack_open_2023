@@ -1,6 +1,6 @@
 const Blog = ({ blog }) => (
-  <div>
-    {blog.title} - {blog.author}
+  <div style={{color: "green"}}>
+    <span style={{color: "navy"}}>{blog.title}</span> - {blog.author}
   </div>  
 )
 
