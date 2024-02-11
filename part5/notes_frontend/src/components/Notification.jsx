@@ -16,7 +16,7 @@ const Notification = () => {
   useEffect(() => {
     if(notification) {
       setTimeout(() => {}, notification.delayMillis ? notification.delayMillis : 5000)
-      setNotification(undefined)
+      setNotification(null)
     }
   }, [notification, setNotification])
 

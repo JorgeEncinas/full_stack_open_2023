@@ -21,6 +21,22 @@ const App = () => {
   }
   useEffect(hook, [])
 
+  useEffect(() => {
+    //console.log("running new effect")
+    const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
+    if(loggedUserJSON) {
+      //console.log("found user")
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      noteService.setToken(user.token)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (user)
+      noteService.setToken(user.token)
+  }, [user])
+
   //console.log("render", notes.length, "notes");
   const handleSetUser = (user) => {
     setUser(user)
@@ -34,9 +50,15 @@ const App = () => {
     }
     noteService.create(noteObject)
       .then(returnedNote => {
+        console.log(returnedNote)
         setNotes(notes.concat(returnedNote))
         setNewNote("")
       })
+  }
+
+  const handleNoteChange = (event) => {
+    console.log(event.target.value)
+    setNewNote(event.target.value)
   }
 
   /* "Suitable when it's impossible to define the state
@@ -49,10 +71,9 @@ const App = () => {
       <h1>Notes</h1>
       <NotificationProvider>
         <Notification />
-        {user 
-        ? <Login user={user} handleSetUser={handleSetUser} />
-        : <NoteInput addNote={addNote}/>}
-        <NotesDisplay />
+        <Login user={user} handleSetUser={handleSetUser} />
+        {user && <NoteInput newNote={newNote} handleNoteChange={handleNoteChange} addNote={addNote}/> }
+        <NotesDisplay notes={notes} setNotes={setNotes} />
       </NotificationProvider>
       <Footer />
     </div>

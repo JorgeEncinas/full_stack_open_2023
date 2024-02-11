@@ -2,9 +2,9 @@ import { useNotification } from "../contexts/NotificationContext"
 import noteService from "../services/notes"
 import { useState, useEffect } from 'react'
 import Note from './Note'
+import PropTypes from 'prop-types'
 
-const NotesDisplay = () => {
-    const [notes, setNotes] = useState([])
+const NotesDisplay = ({ notes, setNotes }) => {
     const [showAll, setShowAll] = useState(true)
     const [ _, setNotification ] = useNotification()
 
@@ -64,6 +64,11 @@ const NotesDisplay = () => {
           </table>
         </div>
     )
+}
+
+NotesDisplay.propTypes = {
+  notes: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.array]).isRequired,
+  setNotes: PropTypes.func.isRequired
 }
 
 export default NotesDisplay

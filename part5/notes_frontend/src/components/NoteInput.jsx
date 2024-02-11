@@ -1,14 +1,8 @@
-import { useState } from 'react'
 import PropTypes from 'prop-types'
 
-const NoteInput = ({addNote}) => {
+const NoteInput = ({ newNote, handleNoteChange, addNote}) => {
 
-    const [newNote, setNewNote] = useState("a new note...")
 
-    const handleNoteChange = (event) => {
-        //console.log(event.target.value)
-        setNewNote(event.target.value)
-    }
 
     return (
         <form onSubmit={addNote}>
@@ -20,6 +14,8 @@ const NoteInput = ({addNote}) => {
 }
 
 NoteInput.propTypes = {
+    newNote: PropTypes.string,
+    handleNoteChange: PropTypes.func,
     addNote: PropTypes.func
 }
 

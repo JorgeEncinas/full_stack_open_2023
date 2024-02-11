@@ -5,9 +5,16 @@ import { useNotification } from '../contexts/NotificationContext'
 
 const Login = ({ user, handleSetUser}) => {
 
+    //console.log("running with user...", user)
+
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [ _notification, setNotification ] = useNotification()
+
+    const logout = () => {
+      window.localStorage.removeItem('loggedNoteappUser')
+      handleSetUser(null)
+    }
 
     const handleLogin = async (event) => {
         event.preventDefault()
@@ -17,6 +24,11 @@ const Login = ({ user, handleSetUser}) => {
             username: username,
             password: password
           })
+
+          window.localStorage.setItem(
+            'loggedNoteappUser', JSON.stringify(user)
+          )
+
           handleSetUser(user)
           setUsername('')
           setPassword('')
@@ -30,7 +42,10 @@ const Login = ({ user, handleSetUser}) => {
       }
     
     if(user) return (
-        <h1>Logged in as {user}.</h1>
+      <div>
+        <h3>Logged in as {user.name} ({user.username}).</h3>
+        <button onClick={logout}>Log out</button>
+      </div>
     )
 
     return ( 
@@ -60,8 +75,7 @@ const Login = ({ user, handleSetUser}) => {
 
 Login.propTypes = {
     user: PropTypes.object,
-    handleSetUser: PropTypes.func,
-    handleSetErrorMessage: PropTypes.func,
+    handleSetUser: PropTypes.func.isRequired,
 }
 
 export default Login

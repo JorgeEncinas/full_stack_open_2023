@@ -17,7 +17,7 @@ NotificationProvider.propTypes = {
     children: PropTypes.node
 }
 
-export const useNotification = () => { //I've seen this pattern at work, but it's thanks to ChatGPT that I recreated it.
+export const useNotification = () => { //I've seen and implemented this pattern at work, but it's thanks to ChatGPT that I learned of it and recreated it
     const context = useContext(NotificationContext)
     if(!context) {
         throw new Error('You have to use useNotification within a provider')
