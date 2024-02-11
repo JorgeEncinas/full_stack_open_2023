@@ -1,19 +1,34 @@
-import PropTypes from 'prop-types'
+import { useEffect } from 'react'
+import { useNotification } from '../contexts/NotificationContext'
 
-const Notification = ({ message }) => {
-  if (message === null) {
+/*
+  notification {
+    class: string,
+    message: string,
+    delayMillis: number
+  }
+*/
+
+const Notification = () => {
+
+  const { notification, setNotification } = useNotification()
+
+  useEffect(() => {
+    if(notification) {
+      setTimeout(() => {}, notification.delayMillis ? notification.delayMillis : 5000)
+      setNotification(undefined)
+    }
+  }, [notification, setNotification])
+
+  if (notification === null || notification === undefined) {
     return null
   }
-
+  console.log(notification)
   return (
-    <div className='error'>
-      {message}
+    <div className={notification.class}>
+      {notification.message}
     </div>
   )
-}
-
-Notification.propTypes = {
-  message: PropTypes.string.isRequired
 }
 
 export default Notification;

@@ -1,35 +1,8 @@
 import { useState, useEffect } from 'react'
 import Note from './components/Note'
-import axios from 'axios'
 import noteService from "./services/notes"
 import Notification from "./components/Notification"
 import Footer from "./components/Footer"
-
-/*const promise = axios.get("http://localhost:3001/notes")
-console.log(promise)
-
-const promise2 = axios.get("http://localhost:3001/foobar")
-console.log(promise2)
-
-promise.then(response => {
-  console.log(response)
-}) */
-/*
-axios
-  .get("http://localhost:3001/notes")
-  .then(response => {
-    const notes = response.data
-    console.log(notes)
-  })
-*/
-const DisplayNotes = ({notes}) => {
-  const lielmts = notes.map(note =>
-  <li key={note.id}>
-    {note.content}
-  </li>
-  )
-  return lielmts
-}
 
 const App = () => {
   const [notes, setNotes] = useState([])
@@ -72,7 +45,6 @@ const App = () => {
 
   const toggleImportanceOf = (id) => {
     console.log(`importance of ${id} needs to be toggled`)
-    const url = `http://localhost:3001/notes/${id}`
     const note = notes.find(n => {
       return n.id === id
     })

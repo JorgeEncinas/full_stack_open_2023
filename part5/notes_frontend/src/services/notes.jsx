@@ -21,7 +21,7 @@ const update = (id, newObject) => {
   return request.then(response => response.data)
 }
 
-const getAll2 = () => {
+/* const getAll2 = () => {
   return axiosFetch(axios.get)
 }
 
@@ -36,6 +36,6 @@ const update2 = (id, newObject) => {
 const axiosFetch = (functionReceived, parametersObj) => {
   const request = functionReceived(baseUrl, ...parametersObj)
   return request.then(response => response.data)
-}
+} */
 
 export default { getAll, create, update }

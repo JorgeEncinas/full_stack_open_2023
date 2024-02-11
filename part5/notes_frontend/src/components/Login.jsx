@@ -1,11 +1,13 @@
 import { useState } from 'react'
-import { loginService } from '../services/login'
+import loginService from '../services/login'
 import PropTypes from 'prop-types'
+import { useNotification } from '../contexts/NotificationContext'
 
-const Login = ({ user, handleSetUser, handleSetErrorMessage }) => {
+const Login = ({ user, handleSetUser}) => {
 
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [ _notification, setNotification ] = useNotification()
 
     const handleLogin = async (event) => {
         event.preventDefault()
@@ -19,10 +21,11 @@ const Login = ({ user, handleSetUser, handleSetErrorMessage }) => {
           setUsername('')
           setPassword('')
         } catch (error) {
-          handleSetErrorMessage('Wrong credentials')
-          setTimeout(() => {
-            handleSetErrorMessage(null)
-          }, 5000)
+          setNotification({
+            class:'error',
+            message:'Wrong credentials',
+            delayMillis:5000
+          })
         }
       }
     

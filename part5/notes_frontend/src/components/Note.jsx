@@ -18,10 +18,11 @@ const Note = ({ note, toggleImportance }) => {
 
 Note.propTypes = {
   note: PropTypes.shape({
-    important: PropTypes.bool,
-    content: PropTypes.string
-  }),
-  toggleImportance: PropTypes.bool
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    important: PropTypes.bool.isRequired,
+    content: PropTypes.string.isRequired
+  }).isRequired,
+  toggleImportance: PropTypes.func.isRequired
 }
 
 export default Note
