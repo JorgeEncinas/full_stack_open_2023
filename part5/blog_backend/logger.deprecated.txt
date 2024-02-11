@@ -1,0 +1,81 @@
+const fs = require('fs')
+const pino = require('pino')
+const path = require('path')
+const logPath = './pino_log.log'
+const logger = pino({
+	transport: {
+		targets: [
+			{
+				level: 'trace',
+				target: 'pino/file',
+				options: {
+					destination: logPath
+				}
+			},
+			{
+				level: 'trace',
+				target: 'pino-pretty',
+				options: {
+					colorize: true
+				}
+			}
+		]
+	},
+})
+
+const info = (...params) => {
+	if(process.env.NODE_ENV !== 'test') {
+		console.log(...params)
+		const logFS = fs.createWriteStream(
+			path.join(__dirname, 'app.log'),
+			{
+				flags: 'a'
+			}
+		)
+		logger.info(logFS)
+		//fs.appendFileSync('info.log', `${new Date().toISOString()} - ${params}\n`)
+	}
+		
+}
+
+const error = (...params) => {
+	if(process.env.NODE_ENV !== 'test') {
+		//console.error(...params)
+		pino.error(...params)
+		const logFS = fs.createWriteStream(
+			path.join(__dirname, 'app_error.log'),
+			{
+				flags: 'a'
+			}
+		)
+		logger.info(logFS)
+		//fs.appendFileSync('error.log', `${new Date().toISOString()} - ${params}\n`)
+	}
+		
+}
+
+module.exports = { info, error }
+
+
+
+const pino = require('pino')
+const pinoLogger = pino({
+	transport: {
+		targets: [
+			{
+				level: 'trace',
+				target: 'pino/file',
+				options: {
+					destination: logPath
+				}
+			},
+			{
+				level: 'trace',
+				target: 'pino-pretty',
+				options: {
+					colorize: true
+				}
+			}
+		]
+	},
+})

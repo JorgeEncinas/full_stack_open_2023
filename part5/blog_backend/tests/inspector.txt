@@ -1,0 +1,75 @@
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFuZHJld2NyIiwiaWQiOiI2NWMxMjMxOWQyMDc1MjM1YWRiZGVjODMiLCJpYXQiOjE3MDcxNTYyNDksImV4cCI6MTcwNzE1OTg0OX0.QFZ_w_Pf7jOWXBSN5zsBdiX_YHyKgW2rRzt2PQkvdEs",
+  "username": "andrewcr",
+  "name": "Andrew Cranston"
+}{
+  "title": "Some blog by Andrew Cranston",
+  "author": "Andrew Cranston",
+  "url": "andrew_cr_is_back",
+  "likes": 0,
+  "user": "65c12319d2075235adbdec83",
+  "id": "65c12319d2075235adbdec8d"
+}{
+  "error": "Cannot read properties of undefined (reading 'toString')"
+}{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFuZHJld2NyIiwiaWQiOiI2NWMxMjNiYWYyZWFmN2VjOTA5ZTRhYjEiLCJpYXQiOjE3MDcxNTY0MTEsImV4cCI6MTcwNzE2MDAxMX0.uC90iNjwWlaRbHa1TDJ8KFed9qwtv8rBpk-2TuRWHwg",
+  "username": "andrewcr",
+  "name": "Andrew Cranston"
+}{
+  "title": "Some blog by Andrew Cranston",
+  "author": "Andrew Cranston",
+  "url": "andrew_cr_is_back",
+  "likes": 0,
+  "user": "65c123baf2eaf7ec909e4ab1",
+  "id": "65c123bbf2eaf7ec909e4abb"
+}{
+  "error": "Cannot read properties of undefined (reading 'toString')"
+}{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFuZHJld2NyIiwiaWQiOiI2NWMxMjNmYzYyZDhkMWJmMDVhMWM2NjEiLCJpYXQiOjE3MDcxNTY0NzYsImV4cCI6MTcwNzE2MDA3Nn0.cAaAvnQMolOwbn_LOfGMoxH4qJQMArB4605CByySZdE",
+  "username": "andrewcr",
+  "name": "Andrew Cranston"
+}{
+  "title": "Some blog by Andrew Cranston",
+  "author": "Andrew Cranston",
+  "url": "andrew_cr_is_back",
+  "likes": 0,
+  "user": "65c123fc62d8d1bf05a1c661",
+  "id": "65c123fc62d8d1bf05a1c66b"
+}{
+  "error": "Cannot read properties of undefined (reading 'toString')"
+}{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFuZHJld2NyIiwiaWQiOiI2NWMxMjQ2NTVkOGM0OGFiMmYyMGY0NmMiLCJpYXQiOjE3MDcxNTY1ODEsImV4cCI6MTcwNzE2MDE4MX0.p0dcOLGTtJfcZD0M9MTM9-SljXXeTbC8hbaYYwvku3Q",
+  "username": "andrewcr",
+  "name": "Andrew Cranston"
+}{
+  "title": "Some blog by Andrew Cranston",
+  "author": "Andrew Cranston",
+  "url": "andrew_cr_is_back",
+  "likes": 0,
+  "user": "65c124655d8c48ab2f20f46c",
+  "id": "65c124655d8c48ab2f20f476"
+}{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFuZHJld2NyIiwiaWQiOiI2NWMxMjQ3ZDM3YTZkOGMzMzM1Yzc0ZTkiLCJpYXQiOjE3MDcxNTY2MDUsImV4cCI6MTcwNzE2MDIwNX0.3Nn8CdB_x2hEiS2-TD923vEMUgi0oySLcvTtg94-jUA",
+  "username": "andrewcr",
+  "name": "Andrew Cranston"
+}{
+  "title": "Some blog by Andrew Cranston",
+  "author": "Andrew Cranston",
+  "url": "andrew_cr_is_back",
+  "likes": 0,
+  "user": "65c1247d37a6d8c3335c74e9",
+  "id": "65c1247d37a6d8c3335c74f3"
+}{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFuZHJld2NyIiwiaWQiOiI2NWMxMjRiODk3YWVlM2IyOWZmYjM5ZjMiLCJpYXQiOjE3MDcxNTY2NjQsImV4cCI6MTcwNzE2MDI2NH0.1dckdKXd0CVa33Nb22R4IcCIPMYEJrPZDeH2Kt31Uqs",
+  "username": "andrewcr",
+  "name": "Andrew Cranston"
+}{
+  "title": "Some blog by Andrew Cranston",
+  "author": "Andrew Cranston",
+  "url": "andrew_cr_is_back",
+  "likes": 0,
+  "user": "65c124b897aee3b29ffb39f3",
+  "id": "65c124b897aee3b29ffb39fd"
+}{
+  "error": "Only the blog poster can delete their blogs."
+}

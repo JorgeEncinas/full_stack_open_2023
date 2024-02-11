@@ -70,9 +70,9 @@ const App = () => {
     <div>
       <h1>Notes</h1>
       <NotificationProvider>
-        <Notification />
         <Login user={user} handleSetUser={handleSetUser} />
         {user && <NoteInput newNote={newNote} handleNoteChange={handleNoteChange} addNote={addNote}/> }
+        <Notification />
         <NotesDisplay notes={notes} setNotes={setNotes} />
       </NotificationProvider>
       <Footer />

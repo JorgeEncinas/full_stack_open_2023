@@ -1,0 +1,47 @@
+GET http://localhost:3003/api/blogs
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title":"How to POST",
+    "author":"John Doe",
+    "url": "posting",
+    "likes": 0
+}
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "author":"Bob Smith",
+    "url": "no_titling_your_post",
+    "likes": 5
+}
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title":"How I removed my own name and lost my mind",
+    "url": "losing_my_mind_and_my_name",
+    "likes": 2035
+}
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title":"How NOT to post a URL",
+    "author":"Sam Ryder",
+    "likes": 2
+}
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title":"Why can't I remove likes in my post?",
+    "author":"Sam Ryder",
+    "url": "why_no_likes"
+}

@@ -11,12 +11,16 @@ import { useNotification } from '../contexts/NotificationContext'
 
 const Notification = () => {
 
-  const { notification, setNotification } = useNotification()
+  const [ notification, setNotification ] = useNotification()
 
   useEffect(() => {
     if(notification) {
-      setTimeout(() => {}, notification.delayMillis ? notification.delayMillis : 5000)
-      setNotification(null)
+      console.log("started timeout")
+      setTimeout(() => {
+        setNotification(null)
+      }, notification.delayMillis ? notification.delayMillis : 5000)
+      
+      console.log("finished timeout")
     }
   }, [notification, setNotification])
 
