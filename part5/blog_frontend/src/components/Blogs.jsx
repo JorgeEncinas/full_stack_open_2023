@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from '../components/Blog'
 import blogService from '../services/blogs'
 import Login from '../components/Login'
 import BlogInput from '../components/BlogInput'
 import { useNotification } from '../contexts/NotificationContext'
+import Togglable from './Togglable'
 
 const Blogs = () => {
 
@@ -69,10 +70,12 @@ const Blogs = () => {
         <div>
             <Login user={user} handleSetUser={handleSetUser}/>
             {user &&
-            <BlogInput handleAddBlog={handleAddBlog}
-                blogAdded={blogAdded}
-                handleBlogAdded={handleBlogAdded}
-            />
+            <Togglable showLabel={'Add new blog'} hideLabel={'Cancel adding'}>
+                <BlogInput handleAddBlog={handleAddBlog}
+                  blogAdded={blogAdded}
+                  handleBlogAdded={handleBlogAdded}
+                />
+            </Togglable>
             }
             {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
