@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import loginService from '../services/login'
+import { useNotification } from '../contexts/NotificationContext'
 
 const Login = ({ user, handleSetUser }) => {
 
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+    const { _notification, setNotification } = useNotification()
 
     const handleLogin = async (event) => {
         event.preventDefault()
@@ -17,9 +19,18 @@ const Login = ({ user, handleSetUser }) => {
                 handleSetUser(user)
                 setUsername("")
                 setPassword("")
+                setNotification({
+                    class:"success",
+                    message:"Login successful!",
+                    delayMillis: 5000
+                })
             }
         } catch (error) {
-            console.log(error)
+            setNotification({
+                class: "error",
+                message: error.response.data?.error,
+                delayMillis: 8000
+            })
         }
     }
 
@@ -32,7 +43,13 @@ const Login = ({ user, handleSetUser }) => {
     }
 
     const logout = () => {
-        if(user) handleSetUser(null)
+        if(user) {
+            handleSetUser(null)
+            setNotification({
+                class: "success",
+                message: "Logged out successfully."
+            })
+        }
     }
 
     if(user) {

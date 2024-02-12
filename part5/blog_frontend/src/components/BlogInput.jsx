@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
+import { useNotification } from '../contexts/NotificationContext'
 
 const BlogInput = ({ handleAddBlog, blogAdded, handleBlogAdded }) => {
     
     const [title, setTitle] = useState("")
     const [author, setAuthor] = useState("")
     const [url, setUrl] = useState("")
+    const { notification, setNotification } = useNotification()
 
     const handleSubmitBlog = (event) => {
         event.preventDefault()
