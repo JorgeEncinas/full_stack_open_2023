@@ -12,7 +12,6 @@ const App2 = () => {
     const [user, setUser] = useState(null)
     const [notification, setNotification] = useState(null)
 
-    const [newNote, setNewNote] = useState(null)
     const [notes, setNotes] = useState([])
 
     useEffect(() => {
@@ -48,18 +47,16 @@ const App2 = () => {
     }, [user])
     
 
-    const addNote = (event) => {
-        event.preventDefault()
-        const noteObject = {
-          content: newNote,
-          important: Math.random() < 0.5
-        }
+    const addNote = (noteObject) => {
         noteService.create(noteObject)
           .then(returnedNote => {
             console.log(returnedNote)
             setNotes(notes.concat(returnedNote))
-            setNewNote("")
           })
+    }
+
+    const attemptLogin = () => {
+
     }
 
     const handleNoteChange = (event) => {
@@ -117,6 +114,9 @@ const App2 = () => {
             </div>
         )
     }
+
+    
+
     return (
         <div>
             {notification &&
@@ -126,18 +126,12 @@ const App2 = () => {
             }
             <Togglable buttonLabel='Login'>
                 <LoginForm
-                    username={username}
-                    password={password}
-                    handleUsernameChange={({ target }) => setUsername(target.value)}
-                    handlePasswordChange={({ target }) => setPassword(target.value)}
-                    handleSubmit={handleLogin}
+                    attemptLogin={attemptLogin}
                 />
             </Togglable>
             <Togglable>
                 <NoteForm
-                    onSubmit={addNote}
-                    value={newNote}
-                    handleChange={handleNoteChange}
+                   createNote={addNote}
                 />
             </Togglable>
         </div>

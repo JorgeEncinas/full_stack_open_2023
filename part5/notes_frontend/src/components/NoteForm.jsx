@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 
-const NoteForm = ({ onSubmit, handleChange, value }) => {
+const NoteForm = ({ createNote }) => {
 
     const [newNote, setNewNote] = useState("")
 
@@ -8,18 +8,20 @@ const NoteForm = ({ onSubmit, handleChange, value }) => {
       event.preventDefault()
       createNote({
         content: newNote,
-        important: true
+        important: false
       })
+
+      setNewNote('')
     }
 
     return (
         <div>
           <h2>Create a new note</h2>
     
-          <form onSubmit={onSubmit}>
+          <form onSubmit={addNote}>
             <input
-              value={value}
-              onChange={handleChange}
+              value={newNote}
+              onChange={event => setNewNote(event.target.value)}
             />
             <button type="submit">save</button>
           </form>
@@ -28,9 +30,7 @@ const NoteForm = ({ onSubmit, handleChange, value }) => {
 }
 
 NoteForm.propTypes = {
-    onSubmit: PropTypes.func,
-    handleChange: PropTypes.func,
-    value: PropTypes.string
+    createNote: PropTypes.func
 }
 
 export default NoteForm
