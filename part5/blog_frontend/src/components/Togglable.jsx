@@ -14,11 +14,13 @@ const Togglable = forwardRef(({ children, showLabel, hideLabel = "Cancel" }, ref
 
     if(!isVisible) {
         return (
-            <button
-                onClick={() => {setIsVisible(true)}}
-            >
-                {showLabel}
-            </button>
+            <div>
+                <button
+                    onClick={() => {setIsVisible(true)}}
+                >
+                    {showLabel}
+                </button>
+            </div>
         )
     }
     return (
