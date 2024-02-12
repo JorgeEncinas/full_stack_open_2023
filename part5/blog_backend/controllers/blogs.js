@@ -71,8 +71,13 @@ blogsRouter.post('/', middleware.userExtractorMW, async (request, response) => {
 		user: user.id
 	})
 
-	const savedBlog = await blog.save()
-	const savedBlogObj = savedBlog.toJSON()
+	let savedBlog = await blog.save()
+	let populatedBlog = await savedBlog.populate(
+		'user',
+		{ username: 1, name: 1}
+	)
+	const savedBlogObj = populatedBlog.toJSON()
+	console.log('This is what I send back', savedBlogObj)
 	user.blogs = user.blogs.concat(savedBlog._id)
 	response.status(201)
 		//.header('Content-Type', 'application/json')

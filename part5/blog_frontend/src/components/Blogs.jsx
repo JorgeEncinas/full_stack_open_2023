@@ -43,6 +43,7 @@ const Blogs = () => {
       try {
         const blogAdded = await blogService.create(newBlog)
         if (blogAdded) {
+          console.log(blogAdded)
           handleBlogAdded(true)
           setBlogs(blogs.concat(blogAdded))
           setNotification({
