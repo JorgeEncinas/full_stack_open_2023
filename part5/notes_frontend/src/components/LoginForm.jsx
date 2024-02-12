@@ -10,6 +10,7 @@ const LoginForm = ({
 
     const handleSubmit = async (event) => {
         event.preventDefault()
+        console.log('logging in with', username, password)
         let attempt = await attemptLogin({
             username: username,
             password: password

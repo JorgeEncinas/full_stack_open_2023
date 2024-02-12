@@ -21,7 +21,7 @@ const NotesDisplay = ({ notes, setNotes }) => {
       }
       useEffect(hook, [])
     
-      const toggleImportanceOf = (noteId) => {
+    const toggleImportanceOf = (noteId) => {
         console.log(`importance of ${noteId} needs to be toggled`)
         //const url = `http://localhost:3001/notes/${id}`
         const note = notes.find(n => {
