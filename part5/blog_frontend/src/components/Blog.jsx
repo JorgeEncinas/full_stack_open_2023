@@ -29,6 +29,11 @@ const Blog = ({ blog }) => {
             <button>Like</button>
           </div>
           <p>Url: {blog.url}</p>
+          <p>User that added this:
+            <span style={{color: "navy", marginLeft: "5px"}}>
+              {blog.user ? blog.user.username : "N/A"}
+            </span>
+          </p>
         </div>
       }
       </div>
