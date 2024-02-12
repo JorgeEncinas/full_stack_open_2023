@@ -50,6 +50,9 @@ const Blogs = () => {
             message: 'Blog added successfully',
             delayMillis: 5000
             })
+          return {
+            wasSuccessful: true
+          }
         }
       } catch (error) {
         setNotification({
@@ -57,6 +60,9 @@ const Blogs = () => {
             message: error.response.data?.error,
             delayMillis: 8000
         })
+        return {
+          wasSuccessful: false
+        }
       }
     }
   
@@ -65,6 +71,8 @@ const Blogs = () => {
         setBlogs( blogs )
       )  
     }, [])
+    //blogAdded={blogAdded}
+    //handleBlogAdded={handleBlogAdded}
 
     return (
         <div>
@@ -72,8 +80,7 @@ const Blogs = () => {
             {user &&
             <Togglable showLabel={'Add new blog'} hideLabel={'Cancel adding'}>
                 <BlogInput handleAddBlog={handleAddBlog}
-                  blogAdded={blogAdded}
-                  handleBlogAdded={handleBlogAdded}
+                  
                 />
             </Togglable>
             }

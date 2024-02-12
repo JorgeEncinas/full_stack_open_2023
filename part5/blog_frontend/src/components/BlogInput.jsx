@@ -1,30 +1,35 @@
 import { useState, useEffect } from 'react'
 import { useNotification } from '../contexts/NotificationContext'
 
-const BlogInput = ({ handleAddBlog, blogAdded, handleBlogAdded }) => {
+const BlogInput = ({ handleAddBlog, }) => { //blogAdded, handleBlogAdded 
     
     const [title, setTitle] = useState("")
     const [author, setAuthor] = useState("")
     const [url, setUrl] = useState("")
     const { notification, setNotification } = useNotification()
 
-    const handleSubmitBlog = (event) => {
+    const handleSubmitBlog = async (event) => {
         event.preventDefault()
         const newBlog = {
             title: title,
             author: author,
             url: url
         }
-        handleAddBlog(newBlog)
+        let response = await handleAddBlog(newBlog)
+        if (response.wasSuccessful) {
+            setTitle("")
+            setAuthor("")
+            setUrl("")
+        }
     }
 
-    useEffect(() => {
+    /*useEffect(() => {
         if(blogAdded)
             setTitle("")
             setAuthor("")
             setUrl("")
             handleBlogAdded(false)
-    }, [blogAdded])
+    }, [blogAdded]) */
     
     return (
         <div>
