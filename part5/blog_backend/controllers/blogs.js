@@ -124,8 +124,11 @@ blogsRouter.put('/:id', middleware.userExtractorMW, async (request, response) =>
 		})
 	}
 	const user = request.user
+	//console.log('id:', request.params.id)
+	//console.log('user', user)
 	const blogToUpdate = await Blog.findById(request.params.id)
-	if (blogToUpdate.user.toString() !== user.id) {
+	console.log(blogToUpdate)
+	if (blogToUpdate.user && blogToUpdate.user.toString() !== user.id) { //oops, accidentally added user.id.toString() when it's just user.toString() bc it receives only the userId anyways.
 		return response.status(401).json({
 			error: blogVM.user.userIsNotThePoster
 		})

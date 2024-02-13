@@ -1,0 +1,14 @@
+[1]:  ChatGPT Prompt on updating one entry from a list:
+
+My question:
+in React, if you have a list of entries, which come from a useState(object[])
+how do I handle updating just one entry? For example, say I update "users", and I change one's "age".
+
+Can I do something like
+setUsers({...users. {id: 4. age: newAge, name: editedUser.name}}
+
+The answer in essence:
+
+const updatedUsers = [...prevUsers];
+        updatedUsers[userIndex] = { ...updatedUsers[userIndex], age: newAge };
+        return updatedUsers;

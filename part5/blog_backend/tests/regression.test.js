@@ -102,7 +102,8 @@ describe('Addition of a blog', () => {
 			.set('Authorization', `Bearer ${authToken}`)
 			.expect(201)
 			.expect('Content-Type',/application\/json/)
-		const noteSaved = JSON.parse(response.text)
+		const noteSaved = response.body
+		console.log(noteSaved)
 	
 		const responseGETAll = await api.get('/api/blogs')
 			.expect(200)	
@@ -110,8 +111,16 @@ describe('Addition of a blog', () => {
 	
 		const responseGET = await api
 			.get(`/api/blogs/${noteSaved.id}`)
-		const findBlog = JSON.parse(responseGET.text)
-		expect(findBlog).toEqual(noteSaved)
+		const findBlog = responseGET.body
+		console.log('findBlog', findBlog)
+		expect(findBlog).toEqual({
+			title: noteSaved.title,
+			author: noteSaved.author,
+			url: noteSaved.url,
+			likes: noteSaved.likes,
+			user: noteSaved.user.id,
+			id: noteSaved.id
+		})
 	})
 
 	test('if likes are missing, it defaults to 0', async () => {

@@ -12,7 +12,7 @@ const Notification = () => {
             }, notification.delayMillis ? notification.delayMillis : 5000)
         }
     }, [notification])
-
+    //console.log(notification)
     if(notification) {
         return (
             <div className={notification.class}>

@@ -19,6 +19,7 @@ const userExtractorMW = async (request, response, next) => {
 		)
 		if(decodedToken.id) {
 			const user = await User.findById(decodedToken.id)
+			console.log('middleware user: ', user)
 			if(user) {
 				request['user'] = user
 			}
