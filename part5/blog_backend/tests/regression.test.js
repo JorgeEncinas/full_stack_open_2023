@@ -285,6 +285,32 @@ describe('Updating a blog', () => {
 		const updatedBlog = new Blog(responsePUT.body)
 		expect(updatedBlog.likes).toEqual(editedBlog.likes)
 	})
+	test('Update likes twice in a row', async () => {
+		const response = await api.get('/api/blogs')
+			.expect(200)
+		const blogs = response.body
+		const firstBlog = blogs[0]
+		const token = await getUserTokenFromBlog(firstBlog)
+		const editedBlog = {
+			likes: firstBlog.likes+1
+		}
+		expect(firstBlog.likes).not.toBe(editedBlog.likes)
+		const responsePUT = await api.put(`/api/blogs/${firstBlog.id}`)
+			.set('Authorization', `Bearer ${token}`)	
+			.send(editedBlog)
+			.expect(200)
+		const updatedBlog = new Blog(responsePUT.body)
+		expect(updatedBlog.likes).toEqual(editedBlog.likes)
+		const editedBlog2 = {
+			likes: editedBlog.likes+1
+		}
+		const responsePUT2 = await api.put(`/api/blogs/${firstBlog.id}`)
+			.set('Authorization', `Bearer ${token}`)
+			.send(editedBlog2)
+		const updatedBlog2 = new Blog(responsePUT2.body)
+		expect(updatedBlog2.likes).toEqual(editedBlog2.likes)
+
+	})
 	test('Update author only', async () => {
 		const response = await api.get('/api/blogs')
 			.expect(200)

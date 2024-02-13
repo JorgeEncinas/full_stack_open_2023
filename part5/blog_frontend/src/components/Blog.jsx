@@ -10,12 +10,16 @@ const Blog = ({ blog, handleUpdateBlog }) => {
   const addLike = async (event) => {
     event.preventDefault()
     //console.log("blog:", blog)
-    const response = await handleUpdateBlog({
+    let editedBlog = {
       ...blog,
-      likes: blog.likes+1
-    })
+      likes: blogGiven.likes+1
+    }
+    console.log("editedBlog on Blog comp:", editedBlog)
+    const response = await handleUpdateBlog(editedBlog)
     if(response.wasSuccessful) {
       setBlogGiven({...blogGiven, likes: blogGiven.likes+1})
+    } else {
+      console.log("error re-running this.")
     }
   }
 

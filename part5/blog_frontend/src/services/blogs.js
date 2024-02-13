@@ -29,7 +29,7 @@ const update = async (editedBlog) => {
       Authorization : token
     }
   }
-  //console.log("editedBlog:", editedBlog)
+  console.log("editedBlog on update:", editedBlog)
 
   const request = await axios.put(
     `${baseUrl}/${editedBlog.id}`,

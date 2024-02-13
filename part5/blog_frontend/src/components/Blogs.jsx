@@ -69,9 +69,11 @@ const Blogs = () => {
           ...blog,
           likes: blog.likes+1
         }*/
-        const updatedBlog = await blogService
+        console.log("editedBlog on Blogs: ", editedBlog)
+        let updatedBlog = await blogService
           .update(editedBlog)
         if(updatedBlog) {
+          console.log("updated blog: ", updatedBlog)
           setNotification({
             class: 'succcess',
             message: 'blog update successful'
